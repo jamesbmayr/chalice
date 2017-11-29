@@ -1,0 +1,19 @@
+{
+  "name": "chalice",
+  "version": "1.0.0",
+  "description": "the card game of death and deception",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"test\"",
+    "start": "node index.js",
+    "mongo": "mongod --dbpath=data/db --port 27017"
+  },
+  "author": "James Mayr",
+  "license": "ISC",
+  "engines": {
+    "node": "6.11.1"
+  },
+  "dependencies": {
+    "mongo": "^0.1.0"
+  }
+}
