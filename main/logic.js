@@ -69,7 +69,7 @@
 					break
 					
 					case "google fonts":
-						return '<link href="https://fonts.googleapis.com/css?family=Roboto+SC:400,700" rel="stylesheet">'
+						return '<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">'
 					break
 
 					case "meta":

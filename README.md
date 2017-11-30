@@ -117,15 +117,14 @@ You win when you have a certain number of cards in your hand at the end of a rou
 |- /main/
 |   |- logic.js (logError, logStatus, logMessage, getEnvironment, getAsset, isReserved, isNumLet, isBot, renderHTML, generateRandom, chooseRandom, sortRandom, locateIP, sanitizeString, determineSession, retrieveData, storeData)
 |   |- stylesheet.css
-|   |- script.js (isNumLet, isEmail, sanitizeString, displayError, buildGhosts, animateGhosts, sendPost)
+|   |- script.js (isNumLet, isEmail, sanitizeString, displayError, sendPost)
 |   |
 |   |- banner.png
 |   |- logo.png
-|   |- logo.svg
 |   |- _404.html
 |
 |- / (home)
-|   |- logic.js (createGame, createPlayer, joinGame)
+|   |- logic.js (createGame, createPlayer, joinGame, getCard, getCup)
 |   |- index.html
 |   |- stylesheet.css
 |   |- script.js (createGame, joinGame)
@@ -136,8 +135,8 @@ You win when you have a certain number of cards in your hand at the end of a rou
 |   |- script.js (submitFeedback)
 |
 |- /game/
-    |- logic.js (fetchData, submitChat, submitNotes, submitEvent, createStaticEvent, createActionEvent, createQueueEvent, getRoleDescription, checkQueue, setupPlayer, launchGame, createDay, createNight, executePlayer, murderPlayer, setupDream, setupRandom)
+    |- logic.js (fetchData, submitEvent, createStaticEvent, createActionEvent, createQueueEvent, getRoleDescription, checkQueue, setupPlayer, launchGame, createDay, createNight, executePlayer, murderPlayer, setupDream, setupRandom)
     |- index.html
     |- stylesheet.css
-    |- script.js (scrollToNewest, startTouch, moveTouch, slideContainer, submitNotes, submitChat, submitEvent, buildChat, buildEvent, disableEvent, enableEvent, localizeTimes, fetchData)
+    |- script.js (scrollToNewest, startTouch, moveTouch, slideContainer, submitEvent, buildEvent, disableEvent, enableEvent, localizeTimes, fetchData)
 </pre>
