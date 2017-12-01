@@ -14,19 +14,20 @@
 						created: new Date().getTime(),
 						updated: new Date().getTime(),
 						state: {
-							locked:  false,
-							start:   false,
-							end:     false,
-							victory: false,
-							pause:   false,
-							round:   null,
-							turn:    null
+							locked: false,
+							start:  null,
+							end:    null,
+							victor: null,
+							round:  null,
+							turn:   null
 						},
-						players:  {},
-						cardDeck: [],
-						cardPile: [],
-						cupDeck:  [],
-						cupPile:  []
+						players:   {},
+						cardDeck:  [],
+						cardPile:  [],
+						cardTable: [],
+						cupDeck:   [],
+						cupPile:   [],
+						cupTable:  []
 					}
 
 				// create cards
@@ -82,7 +83,7 @@
 					id: request.session.id,
 					seat: Object.keys(request.game.players).length || 0,
 					name: null,
-					cup: null,
+					cups: [],
 					cards: [],
 					immunities: [],
 					king: false
@@ -160,6 +161,7 @@
 					// immunities
 						case "arsenicimmunity":
 							return {
+								id: main.generateRandom(),
 								type: "arsenicimmunity",
 								art: "arsenicimmunity.png",
 								color: "gray",
@@ -171,6 +173,7 @@
 
 						case "cyanideimmunity":
 							return {
+								id: main.generateRandom(),
 								type: "cyanideimmunity",
 								art: "cyanideimmunity.png",
 								color: "orange",
@@ -182,6 +185,7 @@
 
 						case "hemlockimmunity":
 							return {
+								id: main.generateRandom(),
 								type: "hemlockimmunity",
 								art: "hemlockimmunity.png",
 								color: "green",
@@ -193,6 +197,7 @@
 
 						case "nightshadeimmunity":
 							return {
+								id: main.generateRandom(),
 								type: "nightshadeimmunity",
 								art: "nightshadeimmunity.png",
 								color: "purple",
@@ -204,6 +209,7 @@
 
 						case "miracle":
 							return {
+								id: main.generateRandom(),
 								type: "miracle",
 								art: "miracle.png",
 								color: "pink",
@@ -216,6 +222,7 @@
 					// switches
 						case "switchleft":
 							return {
+								id: main.generateRandom(),
 								type: "switchleft",
 								art: "switchleft.png",
 								color: "black",
@@ -227,6 +234,7 @@
 
 						case "switchright":
 							return {
+								id: main.generateRandom(),
 								type: "switchright",
 								art: "switchright.png",
 								color: "black",
@@ -238,6 +246,7 @@
 
 						case "switchany":
 							return {
+								id: main.generateRandom(),
 								type: "switchany",
 								art: "switchany.png",
 								color: "black",
@@ -249,6 +258,7 @@
 
 						case "switchclockwise":
 							return {
+								id: main.generateRandom(),
 								type: "switchclockwise",
 								art: "switchclockwise.png",
 								color: "black",
@@ -260,6 +270,7 @@
 
 						case "switchcounterclockwise":
 							return {
+								id: main.generateRandom(),
 								type: "switchcounterclockwise",
 								art: "switchcounterclockwise.png",
 								color: "black",
@@ -272,6 +283,7 @@
 					// special
 						case "steal":
 							return {
+								id: main.generateRandom(),
 								type: "steal",
 								art: "steal.png",
 								color: "black",
@@ -283,6 +295,7 @@
 
 						case "look":
 							return {
+								id: main.generateRandom(),
 								type: "look",
 								art: "look.png",
 								color: "black",
@@ -294,6 +307,7 @@
 
 						case "drinkup":
 							return {
+								id: main.generateRandom(),
 								type: "drinkup",
 								art: "drinkup.png",
 								color: "black",
@@ -305,6 +319,7 @@
 
 						case "drinkall":
 							return {
+								id: main.generateRandom(),
 								type: "drinkall",
 								art: "drinkall.png",
 								color: "orange",
@@ -316,6 +331,7 @@
 
 						case "redistribute":
 							return {
+								id: main.generateRandom(),
 								type: "redistribute",
 								art: "redistribute.png",
 								color: "orange",
@@ -344,6 +360,7 @@
 					// good
 						case "wine":
 							return {
+								id: main.generateRandom(),
 								type: "wine",
 								art: "wine.png",
 								color: "pink",
@@ -354,6 +371,7 @@
 						break
 						case "royalwine":
 							return {
+								id: main.generateRandom(),
 								type: "royalwine",
 								art: "royalwine.png",
 								color: "yellow",
@@ -364,6 +382,7 @@
 						break
 						case "water":
 							return {
+								id: main.generateRandom(),
 								type: "water",
 								art: "water.png",
 								color: "blue",
@@ -376,6 +395,7 @@
 					// bad
 						case "arsenic":
 							return {
+								id: main.generateRandom(),
 								type: "arsenic",
 								art: "arsenic.png",
 								color: "gray",
@@ -386,6 +406,7 @@
 						break
 						case "cyanide":
 							return {
+								id: main.generateRandom(),
 								type: "cyanide",
 								art: "cyanide.png",
 								color: "orange",
@@ -396,6 +417,7 @@
 						break
 						case "hemlock":
 							return {
+								id: main.generateRandom(),
 								type: "hemlock",
 								art: "hemlock.png",
 								color: "green",
@@ -406,6 +428,7 @@
 						break
 						case "nightshade":
 							return {
+								id: main.generateRandom(),
 								type: "nightshade",
 								art: "nightshade.png",
 								color: "purple",

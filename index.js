@@ -195,9 +195,18 @@
 										catch (error) {_403(error)}
 									break
 
-									case "submitEvent":
+									case "submitCard":
 										try {
-											game.submitEvent(request, function (data) {
+											game.submitCard(request, function (data) {
+												response.end(JSON.stringify(data))
+											})
+										}
+										catch (error) {_403(error)}
+									break
+
+									case "submitChoice":
+										try {
+											game.submitChoice(request, function (data) {
 												response.end(JSON.stringify(data))
 											})
 										}

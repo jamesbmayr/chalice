@@ -135,8 +135,8 @@ You win when you have a certain number of cards in your hand at the end of a rou
 |   |- script.js (submitFeedback)
 |
 |- /game/
-    |- logic.js (fetchData, submitEvent, createStaticEvent, createActionEvent, createQueueEvent, getRoleDescription, checkQueue, setupPlayer, launchGame, createDay, createNight, executePlayer, murderPlayer, setupDream, setupRandom)
-    |- index.html
+    |- logic.js (fetchData, submitCard, submitChoice)
+    |- index.html (buildPerson, buildTable)
     |- stylesheet.css
-    |- script.js (scrollToNewest, startTouch, moveTouch, slideContainer, submitEvent, buildEvent, disableEvent, enableEvent, localizeTimes, fetchData)
+    |- script.js (buildPerson, buildTable, fetchData)
 </pre>
