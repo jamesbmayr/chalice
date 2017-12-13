@@ -8,7 +8,7 @@
 
 			sendPost(post, function(data) {
 				if (!data.success) {
-					displayError(data.message || "Unable to create a game...")
+					displayError(data.message || "unable to create a game...")
 				}
 				else {
 					window.location = data.location
@@ -23,10 +23,10 @@
 			var gameCode = document.getElementById("gameCode").value.replace(" ","").trim().toLowerCase() || false
 
 			if (gameCode.length !== 4) {
-				displayError("The game code must be 4 characters.")
+				displayError("game code must be 4 characters...")
 			}
 			else if (!isNumLet(gameCode)) {
-				displayError("The game code can be letters and numbers only.")
+				displayError("game code can be letters and numbers only...")
 			}
 			else {
 				var post = {
@@ -36,7 +36,7 @@
 
 				sendPost(post, function(data) {
 					if (!data.success) {
-						displayError(data.message || "Unable to join this game...")
+						displayError(data.message || "unable to join this game...")
 					}
 					else {
 						window.location = data.location

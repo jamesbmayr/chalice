@@ -17,48 +17,59 @@
 							locked: false,
 							start:  null,
 							end:    null,
-							victor: null,
+							victor: {
+								id:   null,
+								name: null,
+							},
 							round:  null,
 							turn:   null
 						},
-						players:   {},
-						cardDeck:  [],
-						cardPile:  [],
-						cardTable: [],
-						cupDeck:   [],
-						cupPile:   [],
-						cupTable:  []
+						table: {
+							prompt: "",
+							active: [],
+							cards:  [],
+							cups:   []
+						},
+						deck: {
+							cards:  [],
+							cups:   []
+						},
+						pile: {
+							cards:  [],
+							cups:   []
+						},
+						players:   {}
 					}
 
 				// create cards
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("arsenicimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("cyanideimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("hemlockimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("nightshadeimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("miracle")) }
-					for (var i = 0; i < 6; i++) { request.game.cardDeck.push(getCard("switchleft")) }
-					for (var i = 0; i < 6; i++) { request.game.cardDeck.push(getCard("switchright")) }
-					for (var i = 0; i < 6; i++) { request.game.cardDeck.push(getCard("switchany")) }
-					for (var i = 0; i < 4; i++) { request.game.cardDeck.push(getCard("drinkup")) }
-					for (var i = 0; i < 4; i++) { request.game.cardDeck.push(getCard("look")) }
-					for (var i = 0; i < 6; i++) { request.game.cardDeck.push(getCard("steal")) }
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("switchclockwise")) }
-					for (var i = 0; i < 2; i++) { request.game.cardDeck.push(getCard("switchcounterclockwise")) }
-					for (var i = 0; i < 1; i++) { request.game.cardDeck.push(getCard("drinkall")) }
-					for (var i = 0; i < 1; i++) { request.game.cardDeck.push(getCard("redistribute")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("arsenicimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("cyanideimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("hemlockimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("nightshadeimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("miracle")) }
+					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("switchleft")) }
+					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("switchright")) }
+					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("switchany")) }
+					for (var i = 0; i < 4; i++) { request.game.deck.cards.push(getCard("drinkup")) }
+					for (var i = 0; i < 4; i++) { request.game.deck.cards.push(getCard("look")) }
+					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("steal")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("switchclockwise")) }
+					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("switchcounterclockwise")) }
+					for (var i = 0; i < 1; i++) { request.game.deck.cards.push(getCard("drinkall")) }
+					for (var i = 0; i < 1; i++) { request.game.deck.cards.push(getCard("redistribute")) }
 
-					request.game.cardDeck = main.sortRandom(request.game.cardDeck)
+					request.game.deck.cards = main.sortRandom(request.game.deck.cards)
 
 				// create cups
-					for (var i = 0; i < 1; i++) {  request.game.cupDeck.push( getCup("royalwine")) }
-					for (var i = 0; i < 3; i++) {  request.game.cupDeck.push( getCup("wine")) }
-					for (var i = 0; i < 4; i++) {  request.game.cupDeck.push( getCup("water")) }
-					for (var i = 0; i < 2; i++) {  request.game.cupDeck.push( getCup("arsenic")) }
-					for (var i = 0; i < 2; i++) {  request.game.cupDeck.push( getCup("cyanide")) }
-					for (var i = 0; i < 2; i++) {  request.game.cupDeck.push( getCup("hemlock")) }
-					for (var i = 0; i < 2; i++) {  request.game.cupDeck.push( getCup("nightshade")) }
+					for (var i = 0; i < 1; i++) {  request.game.deck.cups.push( getCup("royalwine")) }
+					for (var i = 0; i < 3; i++) {  request.game.deck.cups.push( getCup("wine")) }
+					for (var i = 0; i < 4; i++) {  request.game.deck.cups.push( getCup("water")) }
+					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("arsenic")) }
+					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("cyanide")) }
+					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("hemlock")) }
+					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("nightshade")) }
 
-					request.game.cupDeck  = main.sortRandom(request.game.cupDeck )
+					request.game.deck.cups  = main.sortRandom(request.game.deck.cups )
 
 				// create player
 					request.game.players[request.session.id] = createPlayer(request)
@@ -66,7 +77,7 @@
 
 				// store data
 					main.storeData("games", null, request.game, {}, function (data) {
-						callback({success: true, message: "Created the game!", location: "../../game/" + request.game.id.substring(0,4)})
+						callback({success: true, message: "created the game", location: "../../game/" + request.game.id.substring(0,4)})
 					})
 			}
 			catch (error) {
@@ -105,27 +116,27 @@
 				var gameCode = request.post.gameCode.replace(" ", "").trim().toLowerCase() || false
 
 				if (!gameCode) {
-					callback({success: false, message: "You're missing a game id!"})
+					callback({success: false, message: "missing a game id"})
 				}
 				else if (gameCode.length !== 4) {
-					callback({success: false, message: "The game id must be 4 characters."})
+					callback({success: false, message: "game id must be 4 characters"})
 				}
 				else if (!main.isNumLet(gameCode)) {
-					callback({success: false, message: "The game id must be letters and numbers only."})
+					callback({success: false, message: "game id must be letters and numbers only"})
 				}
 				else {
 					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + gameCode + "'"}, {$multi: true}, function (games) {
 						if (!games) {
-							callback({success: false, message: "The game id was not found..."})
+							callback({success: false, message: "game id not found"})
 						}
 						else if (Object.keys(games[0].players).length >= 6) {
-							callback({success: false, message: "This game is maxed out!"})
+							callback({success: false, message: "game is maxed out"})
 						}
 						else if (games[0].players[request.session.id]) {
-							callback({success: true, message: "You've already joined this game.", location: "../../game/" + games[0].id.substring(0,4)})
+							callback({success: true, message: "already joined this game", location: "../../game/" + games[0].id.substring(0,4)})
 						}
 						else if (games[0].state.start) {
-							callback({success: false, message: "This game has already started."})
+							callback({success: false, message: "game has already started"})
 						}
 						else {
 							request.game = games[0]
@@ -137,10 +148,10 @@
 
 							main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
 								if (!data) {
-									callback({success: false, message: "Unable to join this game."})
+									callback({success: false, message: "unable to join this game"})
 								}
 								else {
-									callback({success: true, message: "You joined the game!", location: "../../game/" + request.game.id.substring(0,4)})
+									callback({success: true, message: "joined the game", location: "../../game/" + request.game.id.substring(0,4)})
 								}
 							})
 						}
@@ -162,182 +173,137 @@
 						case "arsenicimmunity":
 							return {
 								id: main.generateRandom(),
-								type: "arsenicimmunity",
-								art: "arsenicimmunity.png",
-								color: "gray",
-								title: "arsenic immunity",
-								details: "arsenic &#8594; water",
-								action: "setImmunity(player, 'arsenic');"
+								form: "card",
+								type: "arsenic immunity",
+								text: "arsenic &#8594; water",
 							}
 						break
 
 						case "cyanideimmunity":
 							return {
-								id: main.generateRandom(),
-								type: "cyanideimmunity",
-								art: "cyanideimmunity.png",
-								color: "orange",
-								title: "cyanide immunity",
-								details: "cyanide &#8594; water",
-								action: "setImmunity(player, 'cyanide');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "cyanide immunity",
+								text: "cyanide &#8594; water",
 							}
 						break
 
 						case "hemlockimmunity":
 							return {
-								id: main.generateRandom(),
-								type: "hemlockimmunity",
-								art: "hemlockimmunity.png",
-								color: "green",
-								title: "hemlock immunity",
-								details: "hemlock &#8594; water",
-								action: "setImmunity(player, 'hemlock');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "hemlock immunity",
+								text: "hemlock &#8594; water",
 							}
 						break
 
 						case "nightshadeimmunity":
 							return {
-								id: main.generateRandom(),
-								type: "nightshadeimmunity",
-								art: "nightshadeimmunity.png",
-								color: "purple",
-								title: "nightshade immunity",
-								details: "nightshade &#8594; water",
-								action: "setImmunity(player, 'nightshade');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "nightshade immunity",
+								text: "nightshade &#8594; water",
 							}
 						break
 
 						case "miracle":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "card",
 								type: "miracle",
-								art: "miracle.png",
-								color: "pink",
-								title: "miracle",
-								details: "water &#8594; wine",
-								action: "setImmunity(player, 'water');"
+								text: "water &#8594; wine",
 							}
 						break
 
 					// switches
 						case "switchleft":
 							return {
-								id: main.generateRandom(),
-								type: "switchleft",
-								art: "switchleft.png",
-								color: "black",
-								title: "switch left",
-								details: "switch cups with left player",
-								action: "switchCups(player, 'left');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "switch left",
+								text: "switch cups with left player",
 							}
 						break
 
 						case "switchright":
 							return {
-								id: main.generateRandom(),
-								type: "switchright",
-								art: "switchright.png",
-								color: "black",
-								title: "switch right",
-								details: "switch cups with right player",
-								action: "switchCups(player, 'right');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "switch right",
+								text: "switch cups with right player",
 							}
 						break
 
 						case "switchany":
 							return {
-								id: main.generateRandom(),
-								type: "switchany",
-								art: "switchany.png",
-								color: "black",
-								title: "switch any",
-								details: "switch cups with any player",
-								action: "switchCups(player, 'any');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "switch any",
+								text: "switch cups with any player",
 							}
 						break
 
 						case "switchclockwise":
 							return {
-								id: main.generateRandom(),
-								type: "switchclockwise",
-								art: "switchclockwise.png",
-								color: "black",
-								title: "switch clockwise",
-								details: "switch cups with clockwise player",
-								action: "switchCups(player, 'clockwise');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "switch clockwise",
+								text: "switch cups with clockwise player",
 							}
 						break
 
 						case "switchcounterclockwise":
 							return {
-								id: main.generateRandom(),
-								type: "switchcounterclockwise",
-								art: "switchcounterclockwise.png",
-								color: "black",
-								title: "switch counterclockwise",
-								details: "switch cups with counterclockwise player",
-								action: "switchCups(player, 'counterclockwise');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "switch counterclockwise",
+								text: "switch cups with counterclockwise player",
 							}
 						break
 
 					// special
 						case "steal":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "card",
 								type: "steal",
-								art: "steal.png",
-								color: "black",
-								title: "steal",
-								details: "steal a card from any player",
-								action: "stealCard(player, 'any');"
+								text: "steal a card from any player",
 							}
 						break
 
 						case "look":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "card",
 								type: "look",
-								art: "look.png",
-								color: "black",
-								title: "look",
-								details: "look at cards of all player",
-								action: "lookCards(player, 'all');"
+								text: "look at cards of all player",
 							}
 						break
 
 						case "drinkup":
 							return {
-								id: main.generateRandom(),
-								type: "drinkup",
-								art: "drinkup.png",
-								color: "black",
-								title: "drink up!",
-								details: "force any player to drink",
-								action: "drinkCup('any');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "drink up!",
+								text: "force any player to drink",
 							}
 						break
 
 						case "drinkall":
 							return {
-								id: main.generateRandom(),
-								type: "drinkall",
-								art: "drinkall.png",
-								color: "orange",
-								title: "everyone drink!",
-								details: "force all players to drink",
-								action: "drinkCup('all');"
+								id:   main.generateRandom(),
+								form: "card",
+								type: "drink all",
+								text: "force all players to drink",
 							}
 						break
 
 						case "redistribute":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "card",
 								type: "redistribute",
-								art: "redistribute.png",
-								color: "orange",
-								title: "redistribute cups",
-								details: "rearrange all active cups",
-								action: "distributeCups(player);"
+								text: "rearrange all active cups",
 							}
 						break
 
@@ -360,81 +326,67 @@
 					// good
 						case "wine":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "cup",
 								type: "wine",
-								art: "wine.png",
-								color: "pink",
-								title: "wine",
-								details: "draw 2 cards",
-								action: "drawCard(player); drawCard(player);"
+								text: "draw 2 cards",
+								face: "back"
 							}
 						break
 						case "royalwine":
 							return {
-								id: main.generateRandom(),
-								type: "royalwine",
-								art: "royalwine.png",
-								color: "yellow",
-								title: "royal wine",
-								details: "draw 2 cards",
-								action: "drawCard(player); drawCard(player); setKing(player);"
+								id:   main.generateRandom(),
+								form: "cup",
+								type: "royal wine",
+								text: "draw 2 cards",
+								face: "back"
 							}
 						break
 						case "water":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "cup",
 								type: "water",
-								art: "water.png",
-								color: "blue",
-								title: "water",
-								details: "keep cards",
-								action: "keepCards(player);",
+								text: "keep cards",
+								face: "back"
 							}
 						break
 
 					// bad
 						case "arsenic":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "cup",
 								type: "arsenic",
-								art: "arsenic.png",
-								color: "gray",
-								title: "arsenic",
-								details: "discard half of hand",
-								action: "var targetCount = Math.ceil(player.cards.length / 2); while (player.cards.length > targetCount) { discardCard(player); }",
+								text: "discard half of hand",
+								face: "back"
 							}
 						break
 						case "cyanide":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "cup",
 								type: "cyanide",
-								art: "cyanide.png",
-								color: "orange",
-								title: "cyanide",
-								details: "discard half of hand",
-								action: "var targetCount = Math.ceil(player.cards.length / 2); while (player.cards.length > targetCount) { discardCard(player); }",
+								text: "discard half of hand",
+								face: "back"
 							}
 						break
 						case "hemlock":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "cup",
 								type: "hemlock",
-								art: "hemlock.png",
-								color: "green",
-								title: "hemlock",
-								details: "discard half of hand",
-								action: "var targetCount = Math.ceil(player.cards.length / 2); while (player.cards.length > targetCount) { discardCard(player); }",
+								text: "discard half of hand",
+								face: "back"
 							}
 						break
 						case "nightshade":
 							return {
-								id: main.generateRandom(),
+								id:   main.generateRandom(),
+								form: "cup",
 								type: "nightshade",
-								art: "nightshade.png",
-								color: "purple",
-								title: "nightshade",
-								details: "discard half of hand",
-								action: "var targetCount = Math.ceil(player.cards.length / 2); while (player.cards.length > targetCount) { discardCard(player); }",
+								text: "discard half of hand",
+								face: "back"
 							}
 						break
 

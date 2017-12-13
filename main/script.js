@@ -23,7 +23,7 @@
 	/* displayError */
 		function displayError(message) {
 			var error = document.getElementById("error")
-				error.textContent = message || "unknown error"
+				error.textContent = message || "unknown error..."
 				error.className = ""
 				error.style.opacity = 0
 			
@@ -60,7 +60,7 @@
 				request.open("POST", location.pathname, true)
 				request.onload = function() {
 					if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-						callback(JSON.parse(request.responseText) || {success: false, message: "unknown error"})
+						callback(JSON.parse(request.responseText) || {success: false, message: "unknown error..."})
 					}
 					else {
 						callback({success: false, readyState: request.readyState, message: request.status})
