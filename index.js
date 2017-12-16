@@ -204,27 +204,18 @@
 										catch (error) {_403(error)}
 									break
 
-									case "submitCard":
+									case "submitMove":
 										try {
-											game.submitCard(request, function (data) {
+											game.submitMove(request, function (data) {
 												response.end(JSON.stringify(data))
 											})
 										}
 										catch (error) {_403(error)}
 									break
 
-									case "submitSelection":
+									case "submitBegin":
 										try {
-											game.submitSelection(request, function (data) {
-												response.end(JSON.stringify(data))
-											})
-										}
-										catch (error) {_403(error)}
-									break
-
-									case "submitConfirmation":
-										try {
-											game.submitConfirmation(request, function (data) {
+											game.submitBegin(request, function (data) {
 												response.end(JSON.stringify(data))
 											})
 										}

@@ -1,16 +1,19 @@
 /*** onload ***/
 	/* globals */
-		var board  = document.getElementById("board")
-		var status = document.getElementById("status")
-		var round  = parseInt(board.getAttribute("round")) || null
-		var turn   = parseInt(board.getAttribute("turn"))  || null
-		var player =          board.getAttribute("player") || null
+		var board   = document.getElementById("board")
+		var status  = document.getElementById("status")
+		var round   = parseInt(board.getAttribute("round")) || null
+		var turn    = parseInt(board.getAttribute("turn"))  || null
+		var player  =          board.getAttribute("player") || null
+		var active  = null
+		var activeX = null
+		var activeY = null
 
 /*** builds ***/
 	/* buildPerson */
 		function buildPerson(person) {
 			// cards
-				var cardsBlock = '<div class="cards">'
+				var cardsBlock = '<div class="cards" id="' + person.id + '-cards">'
 				for (var c = 0; c < person.cards.length; c++) {
 					cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="" id="' + person.cards[c].id + '">'
 						+ '<div class="card-back"></div>'
@@ -20,7 +23,7 @@
 				cardsBlock += '</div>'
 
 			// immunities
-				var immunitiesBlock = '<div class="immunities>'
+				var immunitiesBlock = '<div class="immunities" id="' + person.id + '-immunities">'
 				for (var i = 0; i < person.immunities.length; i++) {
 					immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g,"") + '" id="' + person.immunities[i].id + '">'
 						+ '<div class="card-back"></div>'
@@ -30,7 +33,7 @@
 				immunitiesBlock += '</div>'
 
 			// cups
-				var cupsBlock = '<div class="cups>'
+				var cupsBlock = '<div class="cups" id="' + person.id + '-cups">'
 				for (var c = 0; c < person.cups.length; c++) {
 					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="" id="' + person.cups[c].id + '">'
 						+ '<div class="cup-back"></div>'
@@ -56,107 +59,159 @@
 		}
 
 	/* buildTable */
-		function buildTable(state, table) {
-			var tableBlock = ''
+		function buildTable(game) {
+			// deck
+				var deckBlock = '<div id="deck">'
+					+ '<div id="deck-cards" class="cards">' + game.spots.deck.cards.length + '</div>'
+					+ '<div id="deck-cups"  class="cups" >' + game.spots.deck.cups.length + '</div>'
+				+ '</div>'
 
-			if (!state.start) {
-				tableBlock += '<div id="status">game has not started</div>'
-				+ '<div id="active"></div>'
-				+ '<div id="prompt"></div>'
-				+ '<div class="cups"></div>'
-				+ '<div class="cards"></div>'
-			}
-			else if (state.end) {
-				tableBlock += '<div id="status">' + state.victor.name + ' wins!</div>'
-				+ '<div id="active"></div>'
-				+ '<div id="prompt"></div>'
-				+ '<div class="cups"></div>'
-				+ '<div class="cards"></div>'
-			}
-			else if (turn !== player) {
-				// active
-					var activeBlock = '<div id="active">'
-					for (var a in table.active) {
-						var card = table.active[a]
-						activeBlock += '<div class="card" face="front" type="' + card[a].type.replace(/\s/g,"") + '" id="' + card[a].id + '">'
-							+ '<div class="card-back"></div>'
-							+ '<div class="card-front"></div>'
-						+ '</div>'
-					}
-					activeBlock += "</div>"
+			// pile
+				var pileBlock = '<div id="pile">'
+					+ '<div id="pile-cards" class="cards">' + game.spots.pile.cards.length + '</div>'
+					+ '<div id="pile-cups"  class="cups" >' + game.spots.pile.cups.length + '</div>'
+				+ '</div>'
 
-				// table		
-					tableBlock += '<div id="status">opponent\'s turn</div>'
-					+ activeBlock
+			// table
+				var tableBlock = ''
+				var begin = game.state.begin ? "" : " disabled"
+
+				if (!game.state.start) {
+					tableBlock += '<div id="status">game has not started</div>'
 					+ '<div id="prompt"></div>'
-					+ '<div class="cups"></div>'
-					+ '<div class="cards"></div>'
-			}
-			else {
-				// active
-					var activeBlock = '<div id="active">'
-					for (var a in table.active) {
-						var card = table.active[a]
-						activeBlock += '<div class="card" face="front" type="' + card[a].type.replace(/\s/g,"") + '" id="' + card[a].id + '">'
-							+ '<div class="card-back"></div>'
-							+ '<div class="card-front"></div>'
-						+ '</div>'
+					+ '<div id="begin"' + begin + '>begin round</div>'
+					+ '<div id="table-cups"  class="cups" ></div>'
+					+ '<div id="table-cards" class="cards"></div>'
+				}
+				else if (game.state.end) {
+					tableBlock += '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
+					+ '<div id="prompt"></div>'
+					+ '<div id="begin"' + begin + '>begin round</div>'
+					+ '<div id="table-cups"  class="cups" ></div>'
+					+ '<div id="table-cards" class="cards"></div>'
+				}
+				else {
+					if (turn !== player) {
+						tableBlock += '<div id="status">opponent\'s turn</div>'
+						+ '<div id="prompt"></div>'
+						+ '<div id="begin"' + begin + '>begin round</div>'
 					}
-					activeBlock += "</div>"
-
-				// cups
-					var cupsBlock = '<div class="cups">'
-					for (var c in request.game.table.cups) {
-						var cup = request.game.table.cups[c]
-						cupsBlock += '<div class="cup" face="front" type="' + cup[c].type.replace(/\s/g,"") + '" id="' + cup[c].id + '">'
-							+ '<div class="cup-back"></div>'
-							+ '<div class="cup-front"></div>'
-						+ '</div>'
+					else {
+						tableBlock += '<div id="status">your turn</div>'
+						+ '<div id="prompt">' + game.spots.table.prompt + '</div>'
+						+ '<div id="begin"' + begin + '>begin round</div>'
 					}
-					cupsBlock += "</div>"
 
-				// cards
-					var cardsBlock += '<div class="cards">'
-					for (var c in request.game.table.cards) {
-						var card = request.game.table.cards[c]
-						cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g,"") + '" id="' + card[c].id + '">'
-							+ '<div class="card-back"></div>'
-							+ '<div class="card-front"></div>'
-						+ '</div>'
-					}
-					cardsBlock += "</div>"
+					// cups
+						var cupsBlock = '<div id="table-cups" class="cups">'
+						for (var c in game.spots.table.cups) {
+							var cup = game.spots.table.cups[c]
+							cupsBlock += '<div class="cup" face="front" type="' + cup[c].type.replace(/\s/g,"") + '" id="' + cup[c].id + '">'
+								+ '<div class="cup-back"></div>'
+								+ '<div class="cup-front"></div>'
+							+ '</div>'
+						}
+						cupsBlock += "</div>"
+					tableBlock += cupsBlock
 
-				// table
-					tableBlock = '<div id="status">your turn</div>'
-					+ activeBlock
-					+ '<div id="prompt">' + table.prompt + '</div>'
-					+ cupsBlock
-					+ cardsBlock
-			}
+					// cards
+						var cardsBlock += '<div id="table-cards" class="cards">'
+						for (var c in game.spots.table.cards) {
+							var card = game.spots.table.cards[c]
+							cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g,"") + '" id="' + card[c].id + '">'
+								+ '<div class="card-back"></div>'
+								+ '<div class="card-front"></div>'
+							+ '</div>'
+						}
+						cardsBlock += "</div>"
+					tableBlock += cardsBlock
+				}
 
-			return tableBlock || ''
+			// combination
+				return deckBlock + pileBlock + tableBlock
 		}
 
 	/* buildEverything */
 		function buildEverything(game) {
 			// update players
-				document.getElementById(player).outerHTML = buildPerson(game.players[player]) || ""
+				document.getElementById(player).outerHTML = buildPerson(game.spots[player]) || ""
 
-				var opponents = Object.keys(game.players).filter(function (p) {
-					return p !== player
+				var opponents = Object.keys(game.spots).filter(function (s) {
+					return ![player, "table", "deck", "pile"].includes(s)
 				}) || []
 				for (var o in opponents) {
-					document.getElementById(opponents[o]).outerHTML = buildPerson(game.players[opponents[o]]) || ""
+					document.getElementById(opponents[o]).outerHTML = buildPerson(game.spots[opponents[o]]) || ""
 				}
 
 			// update table
-				document.getElementById("table").outerHTML = buildTable(game.state, game.table) || ""
+				document.getElementById("deck").remove()
+				document.getElementById("pile").remove()
+				document.getElementById("table").outerHTML = buildTable(game) || ""
+
+			// update event listeners
+				var cards = Array.from(document.querySelectorAll(".card")).concat(Array.from(document.querySelectorAll(".cup")))
+				for (var c in cards) { cards[c].addEventListener("mousedown", selectCard) }
 
 			// check for game end
 				if (game.state.end) {
 					clearInterval(fetchLoop)
-					status.innerText = game.state.victor + " wins!"
+					status.innerText = "the game is over!"
 				}
+		}
+
+/*** moves ***/
+	/* selectCard */
+		var cards = Array.from(document.querySelectorAll(".card")).concat(Array.from(document.querySelectorAll(".cup")))
+		for (var c in cards) { cards[c].addEventListener("mousedown", selectCard) }
+		function selectCard(event) {
+			if (event.target.className == "card" || event.target.className == "cup") {
+				// get coordinates
+					var x = ((event.clientX !== undefined) ? event.clientX : event.targetTouches[0].clientX)
+					var y = ((event.clientY !== undefined) ? event.clientY : event.targetTouches[0].clientY)
+
+				// activate card
+					active  = event.target
+					activeX = x - event.target.getBoundingClientRect().left
+					activeY = y - event.target.getBoundingClientRect().top
+					active.setAttribute("active", true)
+			}
+		}
+
+	/* unselectCard */
+		document.addEventListener("mouseup", unselectCard)
+		function unselectCard(event) {
+			// get coordinates
+				var x = ((event.clientX !== undefined) ? event.clientX : event.targetTouches[0].clientX)
+				var y = ((event.clientY !== undefined) ? event.clientY : event.targetTouches[0].clientY)
+
+			// identify target
+				var targets = Array.from(document.querySelectorAll(".cards")).concat(Array.from(document.querySelectorAll(".cups"))).concat(Array.from(document.querySelectorAll(".immunities")))
+				var target = null
+
+				for (var t = 0; t < targets.length; t++) {
+					var box = targets[t].getBoundingClientRect()
+					if (y >= box.top && y <= box.bottom && x <= box.right && x >= box.left) {
+						target = targets[t]
+						t = targets.length
+					}
+				}
+
+			// submit data
+				submitMove(target)
+		}
+
+	/* moveCard */
+		document.addEventListener("mousemove", moveCard)
+		function moveCard(event) {
+			if (active) {
+				// get coordinates
+					var x = ((event.clientX !== undefined) ? event.clientX : event.targetTouches[0].clientX)
+					var y = ((event.clientY !== undefined) ? event.clientY : event.targetTouches[0].clientY)
+
+				// move card
+					active.style.position.left = x - activeX
+					active.style.position.top  = y - activeY
+			}
 		}
 
 /*** submits ***/
@@ -182,51 +237,54 @@
 			}
 		}
 
-	/* submitCard */
-		function submitCard(event) {
-			if (event.target.className == "card" || event.target.className == "cup") {
-				var card = event.target.id
-
-				sendPost({action: "submitCard", round: round, turn: turn, card: card}, function(response) {
+	/* submitMove */
+		function submitMove(target) {
+			if (!active) {
+				displayError("no card selected...")
+			}
+			else if (!target) {
+				displayError("no target selected...")
+			}
+			else {
+				sendPost({action: "submitMove", card: active.id, target: target.id}, function (response) {
 					if (!response.success) {
-						displayError(response.message || "unable to play card...")
+						displayError(response.message || "unable to move card...")
 					}
 					else {
 						if (response.message) {
 							displayError(response.message)
 						}
 
-						document.getElementById(player).outerHTML  = buildPerson(response.game.players[player]) || ""
-						document.getElementById("table").outerHTML = buildTable(response.game.state, response.game.table) || ""
+						// deactivate card
+							active.removeAttribute("active")
+							active  = null
+							activeX = null
+							activeY = null
+
+						// update board
+							buildEverything(response.game)
 					}
 				})
 			}
 		}
 
-	/* submitSelection */
-		function submitSelection(event) {
-			if (event.target.className == "card" || event.target.className == "cup" || event.target.className == "player" || event.target.className == "opponent") {
-				var target = event.target.id
-
-				sendPost({action: "submitSelection", round: round, turn: turn, target: target}, function(response) {
+	/* submitBegin */
+		function submitBegin(event) {
+			if (event.target.className == "begin") {
+				sendPost({action: "beginRound"}, function(response) {
 					if (!response.success) {
-						displayError(response.message || "unable to select target...")
+						displayError(response.message || "unable to begin round...")
 					}
 					else {
 						if (response.message) {
 							displayError(response.message)
 						}
 
-						document.getElementById(player).outerHTML  = buildPerson(response.game.players[player]) || ""
-						document.getElementById("table").outerHTML = buildTable(response.game.state, response.game.table) || ""
+						// update board
+							buildEverything(response.game)
 					}
 				})
 			}
-		}
-
-	/* submitConfirmation */
-		function submitConfirmation(event) {
-			//
 		}
 
 /*** fetch ***/

@@ -88,7 +88,7 @@ a game of death and deception: http://www.chalicethegame.com
 
 You win when you have a certain number of cards in your hand at the end of a round:
 
-• *3 players*: 11 cards
+• *3 players*: 12 cards
 
 • *4 players*: 10 cards
 
@@ -105,7 +105,7 @@ You win when you have a certain number of cards in your hand at the end of a rou
 
 <pre>
 |- package.json
-|- index.js (handleRequest, parseRequest, routeRequest, _302, _403, _404)
+|- index.js (handleRequest, parseRequest, routeRequest; _302, _403, _404)
 |
 |- /node-modules/
 |   |- mongo
@@ -115,16 +115,16 @@ You win when you have a certain number of cards in your hand at the end of a rou
 |   |- games
 |
 |- /main/
-|   |- logic.js (logError, logStatus, logMessage, getEnvironment, getAsset, isReserved, isNumLet, isBot, renderHTML, generateRandom, chooseRandom, sortRandom, locateIP, sanitizeString, determineSession, retrieveData, storeData)
+|   |- logic.js (logError, logStatus, logMessage; getEnvironment, getAsset; isReserved, isNumLet, isBot; renderHTML; generateRandom, chooseRandom, sortRandom; locateIP, sanitizeString, determineSession; retrieveData, storeData)
 |   |- stylesheet.css
-|   |- script.js (isNumLet, isEmail, sanitizeString, displayError, sendPost)
+|   |- script.js (isNumLet, isEmail; sanitizeString, displayError; sendPost)
 |   |
 |   |- banner.png
 |   |- logo.png
 |   |- _404.html
 |
 |- / (home)
-|   |- logic.js (createGame, createPlayer, joinGame, getCard, getCup)
+|   |- logic.js (createGame, createPlayer; joinGame; getCard, getCup)
 |   |- index.html
 |   |- stylesheet.css
 |   |- script.js (createGame, joinGame)
@@ -135,8 +135,8 @@ You win when you have a certain number of cards in your hand at the end of a rou
 |   |- script.js (submitFeedback)
 |
 |- /game/
-    |- logic.js (fetchData, submitName, submitCard, submitSelection, submitConfirmation, moveCard, drinkCup, getOpponents, getCups, getHands, isRoundEnd, isGameEnd)
+    |- logic.js (fetchData; submitName, submitMove, submitBegin; locateMove, identifyMove, enactMove, completeMove; beginRound; getAllPlayers, getActiveOpponents, resolveDrink, isRoundEnd, isGameEnd, shufflePile)
     |- index.html (buildPerson, buildTable)
     |- stylesheet.css
-    |- script.js (buildPerson, buildTable, buildEverything, submitName, submitCard, submitSelection, submitConfirmation, fetchData)
+    |- script.js (buildPerson, buildTable, buildEverything; selectCard, unselectCard, moveCard; submitName, submitMove, submitBegin; fetchData)
 </pre>

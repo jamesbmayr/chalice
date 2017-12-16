@@ -14,66 +14,70 @@
 						created: new Date().getTime(),
 						updated: new Date().getTime(),
 						state: {
-							locked: false,
-							start:  null,
-							end:    null,
+							start:    null,
+							end:      null,
 							victor: {
 								id:   null,
 								name: null,
 							},
-							round:  null,
-							turn:   null
+							round:    0,
+							turn:     null,
+							begin:    false,
+							acted:    false
 						},
-						table: {
-							prompt: "",
-							active: [],
-							cards:  [],
-							cups:   []
-						},
-						deck: {
-							cards:  [],
-							cups:   []
-						},
-						pile: {
-							cards:  [],
-							cups:   []
-						},
-						players:   {}
+						spots: {
+							table: {
+								id:     "table",
+								prompt: "",
+								cards:  [],
+								cups:   []
+							},
+							deck: {
+								id:     "deck",
+								cards:  [],
+								cups:   []
+							},
+							pile: {
+								id:     "pile",
+								cards:  [],
+								cups:   []
+							}
+						}
 					}
 
 				// create cards
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("arsenicimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("cyanideimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("hemlockimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("nightshadeimmunity")) }
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("miracle")) }
-					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("switchleft")) }
-					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("switchright")) }
-					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("switchany")) }
-					for (var i = 0; i < 4; i++) { request.game.deck.cards.push(getCard("drinkup")) }
-					for (var i = 0; i < 4; i++) { request.game.deck.cards.push(getCard("look")) }
-					for (var i = 0; i < 6; i++) { request.game.deck.cards.push(getCard("steal")) }
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("switchclockwise")) }
-					for (var i = 0; i < 2; i++) { request.game.deck.cards.push(getCard("switchcounterclockwise")) }
-					for (var i = 0; i < 1; i++) { request.game.deck.cards.push(getCard("drinkall")) }
-					for (var i = 0; i < 1; i++) { request.game.deck.cards.push(getCard("redistribute")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("arsenicimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("cyanideimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("hemlockimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("nightshadeimmunity")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("miracle")) }
+					for (var i = 0; i < 6; i++) { request.game.spots.deck.cards.push(getCard("switchleft")) }
+					for (var i = 0; i < 6; i++) { request.game.spots.deck.cards.push(getCard("switchright")) }
+					for (var i = 0; i < 6; i++) { request.game.spots.deck.cards.push(getCard("switchany")) }
+					for (var i = 0; i < 4; i++) { request.game.spots.deck.cards.push(getCard("drinkup")) }
+					for (var i = 0; i < 4; i++) { request.game.spots.deck.cards.push(getCard("look")) }
+					for (var i = 0; i < 6; i++) { request.game.spots.deck.cards.push(getCard("steal")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("switchclockwise")) }
+					for (var i = 0; i < 2; i++) { request.game.spots.deck.cards.push(getCard("switchcounterclockwise")) }
+					for (var i = 0; i < 1; i++) { request.game.spots.deck.cards.push(getCard("drinkall")) }
+					for (var i = 0; i < 1; i++) { request.game.spots.deck.cards.push(getCard("redistribute")) }
 
-					request.game.deck.cards = main.sortRandom(request.game.deck.cards)
+					request.game.spots.deck.cards = main.sortRandom(request.game.spots.deck.cards)
 
 				// create cups
-					for (var i = 0; i < 1; i++) {  request.game.deck.cups.push( getCup("royalwine")) }
-					for (var i = 0; i < 3; i++) {  request.game.deck.cups.push( getCup("wine")) }
-					for (var i = 0; i < 4; i++) {  request.game.deck.cups.push( getCup("water")) }
-					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("arsenic")) }
-					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("cyanide")) }
-					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("hemlock")) }
-					for (var i = 0; i < 2; i++) {  request.game.deck.cups.push( getCup("nightshade")) }
+					for (var i = 0; i < 1; i++) {  request.game.spots.deck.cups.push( getCup("royalwine")) }
+					for (var i = 0; i < 3; i++) {  request.game.spots.deck.cups.push( getCup("wine")) }
+					for (var i = 0; i < 4; i++) {  request.game.spots.deck.cups.push( getCup("water")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("arsenic")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("cyanide")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("hemlock")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("nightshade")) }
 
-					request.game.deck.cups  = main.sortRandom(request.game.deck.cups )
+					request.game.spots.deck.cups  = main.sortRandom(request.game.spots.deck.cups )
 
 				// create player
-					request.game.players[request.session.id] = createPlayer(request)
-					request.game.players[request.session.id].status.creator = true
+					request.game.spots[request.session.id] = createPlayer(request)
+					request.game.spots[request.session.id].status.creator = true
 
 				// store data
 					main.storeData("games", null, request.game, {}, function (data) {
@@ -90,14 +94,18 @@
 		module.exports.createPlayer = createPlayer
 		function createPlayer(request) {
 			try {
+				var all = Object.keys(request.game.spots).filter(function (s) { return !["table", "deck", "pile"].includes(s) })
+
 				var player = {
 					id: request.session.id,
-					seat: Object.keys(request.game.players).length || 0,
+					seat: all.length || 0,
 					name: null,
 					cups: [],
 					cards: [],
 					immunities: [],
-					king: false
+					king: false,
+					active: true,
+					debt: 0
 				}
 
 				return player
@@ -129,10 +137,10 @@
 						if (!games) {
 							callback({success: false, message: "game id not found"})
 						}
-						else if (Object.keys(games[0].players).length >= 6) {
+						else if (Object.keys(games[0].spots).length >= 9) {
 							callback({success: false, message: "game is maxed out"})
 						}
-						else if (games[0].players[request.session.id]) {
+						else if (games[0].spots[request.session.id]) {
 							callback({success: true, message: "already joined this game", location: "../../game/" + games[0].id.substring(0,4)})
 						}
 						else if (games[0].state.start) {
@@ -144,7 +152,11 @@
 
 							var set  = {}
 								set.updated = new Date().getTime()
-								set["players." + request.session.id] = player
+								set["spots." + request.session.id] = player
+
+							if (player.seat > 1) {
+								set["state.begin"] = true
+							}
 
 							main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
 								if (!data) {
@@ -284,7 +296,7 @@
 							return {
 								id:   main.generateRandom(),
 								form: "card",
-								type: "drink up!",
+								type: "drink up",
 								text: "force any player to drink",
 							}
 						break
