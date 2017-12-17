@@ -1,0 +1,552 @@
+/*** page ***/
+	/* background */
+		#background {
+			/*background-image: url(./banner.png);*/
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center;
+			height: 100vh;
+			width: 100vw;
+			overflow: hidden;
+			filter: blur(3px);
+			box-shadow: 0px 0px 20px #333333 inset;
+			opacity: 0.25;
+			z-index: 0;
+		}
+
+	/* board */
+		#board {
+			position: absolute;
+			height: 100vh;
+			width: 100vw;
+			top: 0px;
+			left: 0px;
+			z-index: 1;
+			overflow: hidden;
+		}
+
+	/* variables */
+		:root {
+			--size: 3vh;
+		}
+
+/*** opponents ***/
+	#opponents {
+		position: absolute;
+		width: 100vw;
+		height: calc(100vh - (var(--size) * 20) - 40px);
+		top: 0px;
+		left: 0px;
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		overflow-x: scroll;
+	}
+
+	.opponent {
+		display: inline-block;
+		height: calc(100vh - (var(--size) * 20) - 40px);
+		width: 60vw;
+		box-shadow: 0px 0px 10px #333333 inset;
+	}
+
+	/* name */
+		.opponent .name {
+			width: auto;
+			text-align: center;
+			font-size: 20px;
+			display: inline-block;
+			height: 20px;
+			padding: 10px;
+			border-radius: 5px;
+			max-width: auto;
+			min-width: auto;
+			max-height: 20px;
+			min-height: 20px;
+			background-color: transparent;
+			color: #ffffff;
+			resize: none;
+			cursor: default;
+		}
+
+	/* cups */
+		.opponent .cups {
+			float: left;
+			height: calc(var(--size) * 8);
+			width: calc(var(--size) * 6);
+		}
+
+	/* immunities */
+		.opponent .immunities {
+			float: left;
+			height: calc(var(--size) * 8);
+			width: calc(var(--size) * 6);
+		}
+
+	/* cards */
+		.opponent .cards {
+			float: left;
+			height: calc(var(--size) * 8);
+			width: calc(var(--size) * 6);
+		}
+
+
+/*** table ***/
+	#table {
+		position: absolute;
+		width: 100vw;
+		height: calc((var(--size) * 10) + 40px);
+		left: 0px;
+		bottom: calc(var(--size) * 10);
+		text-align: center;
+		z-index: 1;
+		background-color: #111111;
+	}
+
+	/* status */
+		#status {
+			padding: 10px;
+			font-size: 20px;
+			height: 20px;
+			border-radius: 5px;
+			color: #ffffff;
+			cursor: default;
+			display: inline-block;
+		}
+
+		#begin {
+			padding: 5px;
+			font-size: 20px;
+			height: 20px;
+			width: auto;
+			border-radius: 5px;
+			color: #111111;
+			cursor: pointer;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			display: inline-block;
+			margin-left: 20px;
+			background-color: #ffffff;
+		}
+
+		#begin:hover {
+			background-color: #aaaaaa;
+		}
+
+		#begin[disabled] {
+			display: none;
+			pointer-events: none;
+		}
+
+	/* cups */
+		#table-cups {
+			position: absolute;
+			height: calc((var(--size) * 10) - 20px);
+			top: 40px;
+			left: 0px;
+			width: calc(50vw - (var(--size) * 7) - 20px);
+			background: radial-gradient(#222222, #333333);
+			padding: 10px;
+			white-space: nowrap;
+			overflow: hidden;
+			overflow-x: scroll;
+		}
+
+		#table-cups:after {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			content: "look";
+			background-color: #222222;
+			color: #aaaaaa;
+			border-radius: 5px;
+			padding: 10px;
+			font-size: 20px;
+			height: 25px;
+			width: 50px;
+			transform: translateX(-50%) translateY(-50%);
+		}
+
+	/* cards */
+		#table-cards {
+			position: absolute;
+			height: calc((var(--size) * 10) - 20px);
+			top: 40px;
+			left: calc(50vw - (var(--size) * 7));
+			width: calc(50vw - (var(--size) * 7) - 20px);
+			background: radial-gradient(#222222, #333333);
+			padding: 10px;
+			white-space: nowrap;
+			overflow: hidden;
+			overflow-x: scroll;
+		}
+
+		#table-cards:after {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			content: "play";
+			background-color: #222222;
+			color: #aaaaaa;
+			border-radius: 5px;
+			padding: 10px;
+			font-size: 20px;
+			height: 25px;
+			width: 50px;
+			transform: translateX(-50%) translateY(-50%);
+		}
+
+/*** pile ***/
+	#pile {
+		position: absolute;
+		width: calc(var(--size) * 7);
+		height: calc(var(--size) * 10);
+		bottom: calc(var(--size) * 10);
+		right: calc(var(--size) * 7);
+		text-align: center;
+		z-index: 2;
+		background-color: #333333;
+	}
+
+	#pile:after {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		content: "pile";
+		background-color: #222222;
+		color: #aaaaaa;
+		border-radius: 5px;
+		padding: 10px;
+		font-size: 20px;
+		height: 25px;
+		width: 50px;
+		transform: translateX(-50%) translateY(-50%);
+	}
+
+	/* cards */
+		#pile-cards {
+			position: absolute;
+			top: 0%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #ffffff;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(var(--size) * 7);
+			height: calc(var(--size) * 5);
+			color: #333333;
+			padding: 0px;
+			cursor: default;
+		}
+
+	/* cups */
+		#pile-cups {
+			position: absolute;
+			bottom: 0%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #333333;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(var(--size) * 7);
+			height: calc(var(--size) * 5);
+			color: #ffffff;
+			padding: 0px;
+			cursor: default;
+		}
+
+/*** deck ***/
+	#deck {
+		position: absolute;
+		width: calc(var(--size) * 7);
+		height: calc(var(--size) * 10);
+		bottom: calc(var(--size) * 10);
+		right: 0px;
+		text-align: center;
+		z-index: 2;
+		background-color: #333333;
+	}
+
+	#deck:after {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		content: "deck";
+		background-color: #222222;
+		color: #aaaaaa;
+		border-radius: 5px;
+		padding: 10px;
+		font-size: 20px;
+		height: 25px;
+		width: 50px;
+		transform: translateX(-50%) translateY(-50%);
+	}
+
+	/* cards */
+		#deck-cards {
+			position: absolute;
+			top: 0%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #ffffff;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(var(--size) * 7);
+			height: calc(var(--size) * 5);
+			color: #333333;
+			padding: 0px;
+			cursor: default;
+		}
+
+	/* cups */
+		#deck-cups {
+			position: absolute;
+			bottom: 0%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #333333;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(var(--size) * 7);
+			height: calc(var(--size) * 5);
+			color: #ffffff;
+			padding: 0px;
+			cursor: default;
+		}
+
+/*** player ***/
+	#player {
+		position: absolute;
+		width: 100vw;
+		height: calc(var(--size) * 10);
+		bottom: 0px;
+		text-align: center;
+		background-color: #111111;
+	}
+
+	/* name */
+		#player .name {
+			width: auto;
+			text-align: center;
+			font-size: 20px;
+			display: inline-block;
+			height: 20px;
+			padding: 10px;
+			border-radius: 5px;
+			max-width: auto;
+			min-width: auto;
+			max-height: 20px;
+			min-height: 20px;
+			background-color: transparent;
+			color: #ffffff;
+			resize: none;
+		}
+
+	/* cups */
+		#player .cups {
+			position: absolute;
+			width: calc(var(--size) * 6);
+			height: calc(var(--size) * 8);
+			left: 0px;
+			bottom: 0px;
+			background: radial-gradient(#222222, #333333);
+			white-space: nowrap;
+			overflow: hidden;
+			overflow-x: scroll;
+		}
+
+		#player .cups:after {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			content: "cup";
+			background-color: #222222;
+			color: #aaaaaa;
+			border-radius: 5px;
+			padding: 10px;
+			font-size: 20px;
+			height: 25px;
+			width: 50px;
+			transform: translateX(-50%) translateY(-50%);
+		}
+
+	/* immunities */
+		#player .immunities {
+			position: absolute;
+			width: calc(var(--size) * 12);
+			height: calc(var(--size) * 8);
+			left: calc(var(--size) * 6);
+			bottom: 0px;
+			background: radial-gradient(#222222, #333333);
+			white-space: nowrap;
+			overflow: hidden;
+			overflow-x: scroll;
+		}
+
+		#player .immunities:after {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			content: "immunities";
+			background-color: #222222;
+			color: #aaaaaa;
+			border-radius: 5px;
+			padding: 10px;
+			font-size: 20px;
+			height: 25px;
+			width: 100px;
+			transform: translateX(-50%) translateY(-50%);
+		}
+
+	/* cards */
+		#player .cards {
+			position: absolute;
+			width: calc(100vw - (var(--size) * 18));
+			height: calc(var(--size) * 8);
+			left: calc(var(--size) * 18);
+			bottom: 0px;
+			background: radial-gradient(#222222, #333333);
+			white-space: nowrap;
+			overflow: hidden;
+			overflow-x: scroll;
+		}
+
+		#player .cards:after {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			content: "cards";
+			background-color: #222222;
+			color: #aaaaaa;
+			border-radius: 5px;
+			padding: 10px;
+			font-size: 20px;
+			height: 25px;
+			width: 50px;
+			transform: translateX(-50%) translateY(-50%);
+		}
+
+/*** components ***/
+	/* cards */
+		.card {
+			width: calc(var(--size) * 5);
+			height: calc(var(--size) * 7);
+			display: inline-block;
+			border: 5px solid #222222;
+			border-radius: 5px;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		.card[face="back"] {
+			background-image: url(cardback.png);
+		}
+
+		.card[face="front"][type="switchany"] {
+			background-image: url(switchany.png);
+		}
+
+		.card[face="front"][type="switchleft"] {
+			background-image: url(switchleft.png);
+		}
+
+		.card[face="front"][type="switchright"] {
+			background-image: url(switchright.png);
+		}
+
+		.card[face="front"][type="switchclockwise"] {
+			background-image: url(switchclockwise.png);
+		}
+
+		.card[face="front"][type="switchcounterclockwise"] {
+			background-image: url(switchcounterclockwise.png);
+		}
+
+		.card[face="front"][type="look"] {
+			background-image: url(look.png);
+		}
+
+		.card[face="front"][type="steal"] {
+			background-image: url(steal.png);
+		}
+
+		.card[face="front"][type="drinkup"] {
+			background-image: url(drinkup.png);
+		}
+
+		.card[face="front"][type="drinkall"] {
+			background-image: url(drinkall.png);
+		}
+
+		.card[face="front"][type="redistribute"] {
+			background-image: url(redistribute.png);
+		}
+
+		.card[face="front"][type="miracle"] {
+			background-image: url(miracle.png);
+		}
+
+		.card[face="front"][type="arsenicimmunity"] {
+			background-image: url(arsenicimmunity.png);
+		}
+
+		.card[face="front"][type="cyanideimmunity"] {
+			background-image: url(cyanideimmunity.png);
+		}
+
+		.card[face="front"][type="hemlockimmunity"] {
+			background-image: url(hemlockimmunity.png);
+		}
+
+		.card[face="front"][type="nightshadeimmunity"] {
+			background-image: url(nightshadeimmunity.png);
+		}
+
+	/* cups */
+		.cup {
+			width: calc(var(--size) * 5);
+			height: calc(var(--size) * 7);
+			display: inline-block;
+			border: 5px solid #222222;
+			border-radius: 5px;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		.cup[face="back"] {
+			background-image: url(cupback.png);
+		}
+
+		.cup[face="front"][type="arsenic"] {
+			background-image: url(arsenic.png);
+		}
+
+		.cup[face="front"][type="cyanide"] {
+			background-image: url(cyanide.png);
+		}
+
+		.cup[face="front"][type="hemlock"] {
+			background-image: url(hemlock.png);
+		}
+
+		.cup[face="front"][type="nightshade"] {
+			background-image: url(nightshade.png);
+		}
+
+		.cup[face="front"][type="water"] {
+			background-image: url(water.png);
+		}
+
+		.cup[face="front"][type="wine"] {
+			background-image: url(wine.png);
+		}
+
+		.cup[face="front"][type="royalwine"] {
+			background-image: url(royalwine.png);
+		}
+

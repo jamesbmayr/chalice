@@ -23,12 +23,12 @@
 							round:    0,
 							turn:     null,
 							begin:    false,
-							acted:    false
+							acted:    false,
+							status:   ""
 						},
 						spots: {
 							table: {
 								id:     "table",
-								prompt: "",
 								cards:  [],
 								cups:   []
 							},
@@ -77,7 +77,7 @@
 
 				// create player
 					request.game.spots[request.session.id] = createPlayer(request)
-					request.game.spots[request.session.id].status.creator = true
+					request.game.spots[request.session.id].creator = true
 
 				// store data
 					main.storeData("games", null, request.game, {}, function (data) {
@@ -413,3 +413,4 @@
 				return null
 			}
 		}
+		

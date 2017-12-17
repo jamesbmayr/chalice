@@ -15,40 +15,31 @@
 			// cards
 				var cardsBlock = '<div class="cards" id="' + person.id + '-cards">'
 				for (var c = 0; c < person.cards.length; c++) {
-					cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="" id="' + person.cards[c].id + '">'
-						+ '<div class="card-back"></div>'
-						+ '<div class="card-front"></div>'
-					+ '</div>'
+					cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? person.cards[c].type.replace(/\s/g, "") : "") + '" id="' + person.cards[c].id + '"></div>'
 				}
 				cardsBlock += '</div>'
 
 			// immunities
 				var immunitiesBlock = '<div class="immunities" id="' + person.id + '-immunities">'
 				for (var i = 0; i < person.immunities.length; i++) {
-					immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g,"") + '" id="' + person.immunities[i].id + '">'
-						+ '<div class="card-back"></div>'
-						+ '<div class="card-front"></div>'
-					+ '</div>'
+					immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g, "") + '" id="' + person.immunities[i].id + '"></div>'
 				}
 				immunitiesBlock += '</div>'
 
 			// cups
 				var cupsBlock = '<div class="cups" id="' + person.id + '-cups">'
 				for (var c = 0; c < person.cups.length; c++) {
-					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="" id="' + person.cups[c].id + '">'
-						+ '<div class="cup-back"></div>'
-						+ '<div class="cup-front"></div>'
-					+ '</div>'
+					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cards[c].type : "") + '" id="' + person.cups[c].id + '"></div>'
 				}
 				cupsBlock += '</div>'
 
 			// name
-				var nameBlock = '<div class="name" ' + (person.id == player ? "contenteditable" : "") + '>'
-					+ person.name
-				+ '</div>'
+				var nameBlock = '<textarea class="name" ' + (person.id == player ? "" : "disabled") + '>'
+					+ (person.name || "player " + (person.seat))
+				+ '</textarea>'
 
 			// combined
-				var personBlock = '<div class="' + (person.id == player ? "player" : "opponent") + '" turn="' + (request.game.state.turn == person.seat ? "true" : "false") + '" id="' + person.id + '">'
+				var personBlock = '<div class="' + (person.id == player ? "player" : "opponent") + '" turn="' + (turn == person.seat ? "true" : "false") + '" id="' + person.id + '">'
 					+ nameBlock
 					+ cupsBlock
 					+ immunitiesBlock
@@ -62,14 +53,14 @@
 		function buildTable(game) {
 			// deck
 				var deckBlock = '<div id="deck">'
-					+ '<div id="deck-cards" class="cards">' + game.spots.deck.cards.length + '</div>'
-					+ '<div id="deck-cups"  class="cups" >' + game.spots.deck.cups.length + '</div>'
+					+ '<button id="deck-cards" class="cards">' + game.spots.deck.cards.length + '</button>'
+					+ '<button id="deck-cups"  class="cups" >' + game.spots.deck.cups.length + '</button>'
 				+ '</div>'
 
 			// pile
 				var pileBlock = '<div id="pile">'
-					+ '<div id="pile-cards" class="cards">' + game.spots.pile.cards.length + '</div>'
-					+ '<div id="pile-cups"  class="cups" >' + game.spots.pile.cups.length + '</div>'
+					+ '<button id="pile-cards" class="cards">' + game.spots.pile.cards.length + '</button>'
+					+ '<button id="pile-cups"  class="cups" >' + game.spots.pile.cups.length + '</button>'
 				+ '</div>'
 
 			// table
@@ -78,27 +69,23 @@
 
 				if (!game.state.start) {
 					tableBlock += '<div id="status">game has not started</div>'
-					+ '<div id="prompt"></div>'
 					+ '<div id="begin"' + begin + '>begin round</div>'
 					+ '<div id="table-cups"  class="cups" ></div>'
 					+ '<div id="table-cards" class="cards"></div>'
 				}
 				else if (game.state.end) {
 					tableBlock += '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
-					+ '<div id="prompt"></div>'
 					+ '<div id="begin"' + begin + '>begin round</div>'
 					+ '<div id="table-cups"  class="cups" ></div>'
 					+ '<div id="table-cards" class="cards"></div>'
 				}
 				else {
 					if (turn !== player) {
-						tableBlock += '<div id="status">opponent\'s turn</div>'
-						+ '<div id="prompt"></div>'
+						tableBlock += '<div id="status">' + game.spots.table.prompt || "opponent turn" + '</div>'
 						+ '<div id="begin"' + begin + '>begin round</div>'
 					}
 					else {
-						tableBlock += '<div id="status">your turn</div>'
-						+ '<div id="prompt">' + game.spots.table.prompt + '</div>'
+						tableBlock += '<div id="status">' + game.spots.table.prompt || "your turn" + '</div>'
 						+ '<div id="begin"' + begin + '>begin round</div>'
 					}
 
@@ -106,29 +93,23 @@
 						var cupsBlock = '<div id="table-cups" class="cups">'
 						for (var c in game.spots.table.cups) {
 							var cup = game.spots.table.cups[c]
-							cupsBlock += '<div class="cup" face="front" type="' + cup[c].type.replace(/\s/g,"") + '" id="' + cup[c].id + '">'
-								+ '<div class="cup-back"></div>'
-								+ '<div class="cup-front"></div>'
-							+ '</div>'
+							cupsBlock += '<div class="cup" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? cup[c].type.replace(/\s/g, "") : "") + '" id="' + cup[c].id + '"></div>'
 						}
 						cupsBlock += "</div>"
 					tableBlock += cupsBlock
 
 					// cards
-						var cardsBlock += '<div id="table-cards" class="cards">'
+						var cardsBlock = '<div id="table-cards" class="cards">'
 						for (var c in game.spots.table.cards) {
 							var card = game.spots.table.cards[c]
-							cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g,"") + '" id="' + card[c].id + '">'
-								+ '<div class="card-back"></div>'
-								+ '<div class="card-front"></div>'
-							+ '</div>'
+							cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g, "") + '" id="' + card[c].id + '"></div>'
 						}
 						cardsBlock += "</div>"
 					tableBlock += cardsBlock
 				}
 
 			// combination
-				return deckBlock + pileBlock + tableBlock
+				return deckBlock + pileBlock + '<div id="table">' + tableBlock + '</div>'
 		}
 
 	/* buildEverything */
@@ -216,13 +197,15 @@
 
 /*** submits ***/
 	/* submitName */
-		if (player) { Array.from(document.getElementById(player).querySelectorAll("name"))[0].addEventListener("change", submitName) }
+		try {
+			if (player) { Array.from(document.getElementById(player).querySelectorAll(".name"))[0].addEventListener("change", submitName) }
+		} catch (error) {}
 		function submitName(event) {
 			if (player) {
-				var name = Array.from(document.getElementById(player).querySelectorAll("name"))[0]
-				var newName = sanitizeString(name.innerText)
+				var name = Array.from(document.getElementById(player).querySelectorAll(".name"))[0]
+				var newName = sanitizeString(name.value)
 
-				sendPost({action: "submitName"}, function (response) {
+				sendPost({action: "submitName", name: newName}, function (response) {
 					if (!response.success) {
 						displayError(response.message || "unable to change name...")
 					}
@@ -231,7 +214,7 @@
 							displayError(response.message)
 						}
 
-						name.innerText = response.name
+						name.value = response.name
 					}
 				})
 			}
@@ -240,7 +223,7 @@
 	/* submitMove */
 		function submitMove(target) {
 			if (!active) {
-				displayError("no card selected...")
+				//
 			}
 			else if (!target) {
 				displayError("no target selected...")
@@ -269,9 +252,10 @@
 		}
 
 	/* submitBegin */
+		document.getElementById("begin").addEventListener("click", submitBegin)
 		function submitBegin(event) {
-			if (event.target.className == "begin") {
-				sendPost({action: "beginRound"}, function(response) {
+			if (event.target.id == "begin") {
+				sendPost({action: "submitBegin"}, function(response) {
 					if (!response.success) {
 						displayError(response.message || "unable to begin round...")
 					}

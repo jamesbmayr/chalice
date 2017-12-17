@@ -84,6 +84,16 @@
 										catch (error) {_404(error)}
 									break
 
+								// card
+									case (/[.]png$/).test(request.url):
+									console.log(request.path)
+										try {
+											response.writeHead(200, {"Content-Type": "image/png"})
+											response.end(fs.readFileSync("./main/images/" + request.path[request.path.length - 1]), "binary")
+										}
+										catch (error) {_404(error)}
+									break
+
 								// stylesheet
 									case (/\/stylesheet[.]css$/).test(request.url):
 										try {
@@ -140,7 +150,7 @@
 												if (!games) {
 													_302()
 												}
-												else if (Object.keys(games[0].players).indexOf(request.session.id) == -1) { // observer
+												else if (Object.keys(games[0].spots).indexOf(request.session.id) == -1) { // observer
 													request.session.id = "*"
 													request.game = games[0]
 													response.end(main.renderHTML(request, "./game/index.html"))

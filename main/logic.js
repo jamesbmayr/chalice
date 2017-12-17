@@ -3,8 +3,9 @@
 	var fs       = require("fs")
 	var mongo    = require("mongodb").MongoClient
 	var database = "mongodb://" + getEnvironment("database_username") + ":" + getEnvironment("database_password") + getEnvironment("database_url")
-	var game     = require("../game/logic")
 	module.exports = {}
+
+	var game     = require("../game/logic")
 
 /*** logs ***/
 	/* logError */
@@ -74,15 +75,15 @@
 					break
 
 					case "meta":
-						return '<meta charset="UTF-8"/>\
-								<meta name="description" content="Chalice is a game of death and deception."/>\
-								<meta name="keywords" content="game,chalice,cards,card,deduction,guess,party,tabletop"/>\
-								<meta name="author" content="James Mayr"/>\
-								<meta property="og:title" content="Chalice: the card game"/>\
-								<meta property="og:url" content="https://www.chalicethegame.com"/>\
-								<meta property="og:description" content="Chalice is a game of death and deception."/>\
-								<meta property="og:image" content="https://www.chalicethegame.com/banner.png"/>\
-								<meta name="viewport" content="initial-scale=1.0, width=device-width, minimum-scale=1, maximum-scale=1, target-densitydpi=device-dpi, user-scalable=no"/>'
+						return '<meta charset="UTF-8"/>\n\
+								<meta name="description" content="Chalice is a game of death and deception."/>\n\
+								<meta name="keywords" content="game,chalice,cards,card,deduction,guess,party,tabletop"/>\n\
+								<meta name="author" content="James Mayr"/>\n\
+								<meta property="og:title" content="Chalice: the card game"/>\n\
+								<meta property="og:url" content="https://www.chalicethegame.com"/>\n\
+								<meta property="og:description" content="Chalice is a game of death and deception."/>\n\
+								<meta property="og:image" content="https://www.chalicethegame.com/banner.png"/>\n\
+								<meta name="viewport" content="initial-scale=1.0, width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no"/>'
 					break
 
 					default:

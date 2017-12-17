@@ -12,43 +12,34 @@
 				var player = request.session.id       || null
 				var round  = request.game.state.round || null
 				var turn   = request.game.state.turn  || null
-			
+		</script>node><script node>		
 			/* buildPerson */
 				function buildPerson(person) {
 					// cards
 						var cardsBlock = '<div class="cards" id="' + person.id + '-cards">'
 						for (var c = 0; c < person.cards.length; c++) {
-							cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="" id="' + person.cards[c].id + '">'
-								+ '<div class="card-back"></div>'
-								+ '<div class="card-front"></div>'
-							+ '</div>'
+							cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? person.cards[c].type.replace(/\s/g, "") : "") + '" id="' + person.cards[c].id + '"></div>'
 						}
 						cardsBlock += '</div>'
 
 					// immunities
 						var immunitiesBlock = '<div class="immunities" id="' + person.id + '-immunities">'
 						for (var i = 0; i < person.immunities.length; i++) {
-							immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g,"") + '" id="' + person.immunities[i].id + '">'
-								+ '<div class="card-back"></div>'
-								+ '<div class="card-front"></div>'
-							+ '</div>'
+							immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g, "") + '" id="' + person.immunities[i].id + '"></div>'
 						}
 						immunitiesBlock += '</div>'
 
 					// cups
 						var cupsBlock = '<div class="cups" id="' + person.id + '-cups">'
 						for (var c = 0; c < person.cups.length; c++) {
-							cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="" id="' + person.cups[c].id + '">'
-								+ '<div class="cup-back"></div>'
-								+ '<div class="cup-front"></div>'
-							+ '</div>'
+							cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cards[c].type : "") + '" id="' + person.cups[c].id + '"></div>'
 						}
 						cupsBlock += '</div>'
 
 					// name
-						var nameBlock = '<div class="name" ' + (person.id == player ? "contenteditable" : "") + '>'
-							+ person.name
-						+ '</div>'
+						var nameBlock = '<textarea class="name" ' + (person.id == player ? "" : "disabled") + '>'
+							+ (person.name || "player " + (person.seat))
+						+ '</textarea>'
 
 					// combined
 						var personBlock = '<div class="' + (person.id == player ? "player" : "opponent") + '" turn="' + (turn == person.seat ? "true" : "false") + '" id="' + person.id + '">'
@@ -60,19 +51,19 @@
 
 					return personBlock || ''
 				}
-
+		</script>node><script node>
 			/* buildTable */
 				function buildTable(game) {
 					// deck
 						var deckBlock = '<div id="deck">'
-							+ '<div id="deck-cards" class="cards">' + game.spots.deck.cards.length + '</div>'
-							+ '<div id="deck-cups"  class="cups" >' + game.spots.deck.cups.length + '</div>'
+							+ '<button id="deck-cards" class="cards">' + game.spots.deck.cards.length + '</button>'
+							+ '<button id="deck-cups"  class="cups" >' + game.spots.deck.cups.length + '</button>'
 						+ '</div>'
 
 					// pile
 						var pileBlock = '<div id="pile">'
-							+ '<div id="pile-cards" class="cards">' + game.spots.pile.cards.length + '</div>'
-							+ '<div id="pile-cups"  class="cups" >' + game.spots.pile.cups.length + '</div>'
+							+ '<button id="pile-cards" class="cards">' + game.spots.pile.cards.length + '</button>'
+							+ '<button id="pile-cups"  class="cups" >' + game.spots.pile.cups.length + '</button>'
 						+ '</div>'
 
 					// table
@@ -81,27 +72,23 @@
 
 						if (!game.state.start) {
 							tableBlock += '<div id="status">game has not started</div>'
-							+ '<div id="prompt"></div>'
 							+ '<div id="begin"' + begin + '>begin round</div>'
 							+ '<div id="table-cups"  class="cups" ></div>'
 							+ '<div id="table-cards" class="cards"></div>'
 						}
 						else if (game.state.end) {
 							tableBlock += '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
-							+ '<div id="prompt"></div>'
 							+ '<div id="begin"' + begin + '>begin round</div>'
 							+ '<div id="table-cups"  class="cups" ></div>'
 							+ '<div id="table-cards" class="cards"></div>'
 						}
 						else {
 							if (turn !== player) {
-								tableBlock += '<div id="status">opponent\'s turn</div>'
-								+ '<div id="prompt"></div>'
+								tableBlock += '<div id="status">' + game.spots.table.status || "opponent turn" + '</div>'
 								+ '<div id="begin"' + begin + '>begin round</div>'
 							}
 							else {
-								tableBlock += '<div id="status">your turn</div>'
-								+ '<div id="prompt">' + game.spots.table.prompt + '</div>'
+								tableBlock += '<div id="status">' + game.spots.table.status || "your turn" + '</div>'
 								+ '<div id="begin"' + begin + '>begin round</div>'
 							}
 
@@ -109,57 +96,54 @@
 								var cupsBlock = '<div id="table-cups" class="cups">'
 								for (var c in game.spots.table.cups) {
 									var cup = game.spots.table.cups[c]
-									cupsBlock += '<div class="cup" face="front" type="' + cup[c].type.replace(/\s/g,"") + '" id="' + cup[c].id + '">'
-										+ '<div class="cup-back"></div>'
-										+ '<div class="cup-front"></div>'
-									+ '</div>'
+									cupsBlock += '<div class="cup" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? cup[c].type.replace(/\s/g, "") : "") + '" id="' + cup[c].id + '"></div>'
 								}
 								cupsBlock += "</div>"
 							tableBlock += cupsBlock
 
 							// cards
-								var cardsBlock += '<div id="table-cards" class="cards">'
+								var cardsBlock = '<div id="table-cards" class="cards">'
 								for (var c in game.spots.table.cards) {
 									var card = game.spots.table.cards[c]
-									cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g,"") + '" id="' + card[c].id + '">'
-										+ '<div class="card-back"></div>'
-										+ '<div class="card-front"></div>'
-									+ '</div>'
+									cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g, "") + '" id="' + card[c].id + '"></div>'
 								}
 								cardsBlock += "</div>"
 							tableBlock += cardsBlock
 						}
 
 					// combination
-						return deckBlock + pileBlock + tableBlock
+						return deckBlock + pileBlock + '<div id="table">' + tableBlock + '</div>'
 				}
-
+		</script>node><script node>
 			/* fetchLoop */
-				if (request.game.state.end) { "<script>window.clearLoop = true</script>" }
+				if (request.game.state.end || true) { "<script>window.clearLoop = true</script>" }
 		</script>node>
 	</head>
 	<body>
 		<div id="background"></div>
 		<div id="error" class="hidden"></div>
 		<div id="board" round="<script node>round</script>node>" turn="<script node>turn</script>node>" player="<script node>player</script>node>">
-			<div id="opponents"><script node>
+			<script node>
 				var opponentsBlock = ''
-				var opponents = game.getAllPlayers(request, "left").filter(function (p) {
+				var opponents = game.getAllPlayers(request, "left")
+
+				opponents = opponents.filter(function (p) {
 					return p !== player
 				}) || []
 
 				for (var o in opponents) {
 					opponentsBlock += buildPerson(request.game.spots[opponents[o]]) || ''
 				}
-				opponentsBlock || ""
-			</script>node></div>
-			<div id="table"><script node>
-				buildTable(request.game) || ""
-			</script>node></div>
-			<div id="player"><script node>
-				var playerBlock = buildPerson(request.game.spots[player]) || ''
-				playerBlock || ""
-			</script>node></div>
+				
+				'<div id="opponents">' + (opponentsBlock || "") + '</div>'
+			</script>node><script node>
+				buildTable(request.game) || '<div id="deck"></div><div id="pile"></div><div id="table"></div>'
+			</script>node><script node>
+				if (request.game.spots[player]) {
+					var playerBlock = buildPerson(request.game.spots[player]) || ''
+				}
+				'<div id="player">' + (playerBlock || "") + '</div>'
+			</script>node>
 		</div>
 	</body>
 </html>
