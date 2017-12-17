@@ -69,31 +69,31 @@
 
 				if (!game.state.start) {
 					tableBlock += '<div id="status">game has not started</div>'
-					+ '<div id="begin"' + begin + '>begin round</div>'
+					+ '<button id="begin"' + begin + '>begin round</button>'
 					+ '<div id="table-cups"  class="cups" ></div>'
 					+ '<div id="table-cards" class="cards"></div>'
 				}
 				else if (game.state.end) {
 					tableBlock += '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
-					+ '<div id="begin"' + begin + '>begin round</div>'
+					+ '<button id="begin"' + begin + '>begin round</button>'
 					+ '<div id="table-cups"  class="cups" ></div>'
 					+ '<div id="table-cards" class="cards"></div>'
 				}
 				else {
 					if (turn !== player) {
-						tableBlock += '<div id="status">' + game.spots.table.prompt || "opponent turn" + '</div>'
-						+ '<div id="begin"' + begin + '>begin round</div>'
+						tableBlock += '<div id="status">' + (game.state.status || ((game.spots[game.state.turn].name || ("player " + game.spots[game.state.turn].seat)) + "'s turn")) + '</div>'
 					}
 					else {
-						tableBlock += '<div id="status">' + game.spots.table.prompt || "your turn" + '</div>'
-						+ '<div id="begin"' + begin + '>begin round</div>'
+						tableBlock += '<div id="status">' + (game.state.status || "your turn") + '</div>'
 					}
+
+					tableBlock += '<button id="begin"' + begin + '>begin round</button>'
 
 					// cups
 						var cupsBlock = '<div id="table-cups" class="cups">'
 						for (var c in game.spots.table.cups) {
 							var cup = game.spots.table.cups[c]
-							cupsBlock += '<div class="cup" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? cup[c].type.replace(/\s/g, "") : "") + '" id="' + cup[c].id + '"></div>'
+							cupsBlock += '<div class="cup" face="' + (turn == player ? "front" : "back") + '" type="' + (turn == player ? cup.type.replace(/\s/g, "") : "") + '" id="' + cup.id + '"></div>'
 						}
 						cupsBlock += "</div>"
 					tableBlock += cupsBlock
@@ -102,7 +102,7 @@
 						var cardsBlock = '<div id="table-cards" class="cards">'
 						for (var c in game.spots.table.cards) {
 							var card = game.spots.table.cards[c]
-							cardsBlock += '<div class="card" face="front" type="' + card[c].type.replace(/\s/g, "") + '" id="' + card[c].id + '"></div>'
+							cardsBlock += '<div class="card" face="front" type="' + card.type.replace(/\s/g, "") + '" id="' + card.id + '"></div>'
 						}
 						cardsBlock += "</div>"
 					tableBlock += cardsBlock
@@ -155,7 +155,11 @@
 					activeX = x - event.target.getBoundingClientRect().left
 					activeY = y - event.target.getBoundingClientRect().top
 					active.setAttribute("active", true)
+					active.style.left = activeX + "px"
+					active.style.top  = activeY + "px"
+					console.log(active)
 			}
+
 		}
 
 	/* unselectCard */
@@ -190,8 +194,8 @@
 					var y = ((event.clientY !== undefined) ? event.clientY : event.targetTouches[0].clientY)
 
 				// move card
-					active.style.position.left = x - activeX
-					active.style.position.top  = y - activeY
+					active.style.left = x - activeX + "px"
+					active.style.top  = y - activeY + "px"
 			}
 		}
 
@@ -232,6 +236,12 @@
 				sendPost({action: "submitMove", card: active.id, target: target.id}, function (response) {
 					if (!response.success) {
 						displayError(response.message || "unable to move card...")
+
+						// deactivate card
+							active.removeAttribute("active")
+							active  = null
+							activeX = null
+							activeY = null
 					}
 					else {
 						if (response.message) {

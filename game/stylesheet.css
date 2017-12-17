@@ -23,104 +23,314 @@
 			left: 0px;
 			z-index: 1;
 			overflow: hidden;
-		}
-
-	/* variables */
-		:root {
-			--size: 3vh;
+			background-color: #dddddd;
 		}
 
 /*** opponents ***/
 	#opponents {
-		position: absolute;
+		float: left;
 		width: 100vw;
-		height: calc(100vh - (var(--size) * 20) - 40px);
+		height: calc((3vh * 7) + 10px + 10px + 10px + 15px);
 		top: 0px;
 		left: 0px;
 		text-align: center;
 		white-space: nowrap;
 		overflow: hidden;
 		overflow-x: scroll;
+		background-color: #dddddd;
 	}
 
 	.opponent {
 		display: inline-block;
-		height: calc(100vh - (var(--size) * 20) - 40px);
-		width: 60vw;
-		box-shadow: 0px 0px 10px #333333 inset;
+		height: calc((3vh * 7) + 10px + 10px);
+		border: 5px solid #111111;
+		border-radius: 10px;
 	}
 
 	/* name */
 		.opponent .name {
-			width: auto;
-			text-align: center;
-			font-size: 20px;
 			display: inline-block;
-			height: 20px;
+			height: calc((3vh * 7));
+			width: calc((3vh * 5));
+			text-align: center;
+			font-size: 15px;
 			padding: 10px;
-			border-radius: 5px;
-			max-width: auto;
-			min-width: auto;
-			max-height: 20px;
-			min-height: 20px;
+			border-radius: 20px 20px 0px 0px;			
 			background-color: transparent;
-			color: #ffffff;
+			color: #111111;
 			resize: none;
-			cursor: default;
+			text-transform: uppercase;
+			font-weight: bold;
 		}
 
 	/* cups */
 		.opponent .cups {
-			float: left;
-			height: calc(var(--size) * 8);
-			width: calc(var(--size) * 6);
+			display: inline-block;
+			height: calc((3vh * 8) - 10px);
+			min-width: calc((3vh * 6) - 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			padding: 5px;
+			vertical-align: top;
+			border-radius: 10px;
+		}
+
+		.opponent .cups:after {
+			display: block;
+			text-align: center;
+			content: "cup";
+			color: #333333;
+			border-radius: 5px;
+			font-size: 15px;
+			height: 25px;
+			width: 100%;
+			transform: translateY(250%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 	/* immunities */
 		.opponent .immunities {
-			float: left;
-			height: calc(var(--size) * 8);
-			width: calc(var(--size) * 6);
+			display: inline-block;
+			height: calc((3vh * 8) - 10px);
+			min-width: calc((3vh * 6) - 10px);
+			padding: 5px;
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			vertical-align: top;
+			border-radius: 10px;
+		}
+
+		.opponent .immunities:after {
+			display: block;
+			text-align: center;
+			content: "immunities";
+			color: #333333;
+			border-radius: 5px;
+			font-size: 15px;
+			height: 25px;
+			width: 100%;
+			transform: translateY(250%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 	/* cards */
 		.opponent .cards {
-			float: left;
-			height: calc(var(--size) * 8);
-			width: calc(var(--size) * 6);
+			display: inline-block;
+			padding: 5px;
+			height: calc((3vh * 8) - 10px);
+			min-width: calc((3vh * 6) - 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			vertical-align: top;
+			border-radius: 10px;
 		}
 
+		.opponent .cards:after {
+			display: block;
+			text-align: center;
+			content: "cards";
+			color: #333333;
+			border-radius: 5px;
+			font-size: 15px;
+			height: 25px;
+			width: 100%;
+			transform: translateY(250%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
+
+/*** deck ***/
+	#deck {
+		float: left;
+		width: calc(3vh * 7);
+		height: calc(3vh * 10);
+		text-align: center;
+		z-index: 2;
+		padding-top: 50px;
+	}
+
+	#deck:after {
+		position: relative;
+		content: "deck";
+		background-color: #222222;
+		color: #aaaaaa;
+		border-radius: 5px;
+		padding: 10px;
+		font-size: 15px;
+		height: 20px;
+		top: calc(-50% - 20px);
+		opacity: 0.5;
+		pointer-events: none;
+		user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+	}
+
+	/* cards */
+		#deck-cards {
+			float: left;
+			background-color: #ffffff;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(3vh * 7);
+			height: calc(3vh * 5);
+			color: #333333;
+			padding: 0px;
+			cursor: default;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
+
+	/* cups */
+		#deck-cups {
+			float: left;
+			background-color: #333333;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(3vh * 7);
+			height: calc(3vh * 5);
+			color: #ffffff;
+			padding: 0px;
+			cursor: default;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
+
+/*** pile ***/
+	#pile {
+		float: left;
+		width: calc(3vh * 7);
+		height: calc(3vh * 10);
+		text-align: center;
+		z-index: 2;
+		padding-top: 50px;
+	}
+
+	#pile:after {
+		position: relative;
+		content: "pile";
+		background-color: #222222;
+		color: #aaaaaa;
+		border-radius: 5px;
+		padding: 10px;
+		font-size: 15px;
+		height: 20px;
+		top: calc(-50% - 20px);
+		opacity: 0.5;
+		pointer-events: none;
+		user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+	}
+
+	/* cards */
+		#pile-cards {
+			float: left;
+			background-color: #ffffff;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(3vh * 7);
+			height: calc(3vh * 5);
+			color: #333333;
+			padding: 0px;
+			cursor: default;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
+
+	/* cups */
+		#pile-cups {
+			float: left;
+			background-color: #333333;
+			border-radius: 10px;
+			border: 5px solid #222222;
+			width: calc(3vh * 7);
+			height: calc(3vh * 5);
+			color: #ffffff;
+			padding: 0px;
+			cursor: default;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+		}
 
 /*** table ***/
 	#table {
-		position: absolute;
-		width: 100vw;
-		height: calc((var(--size) * 10) + 40px);
-		left: 0px;
-		bottom: calc(var(--size) * 10);
+		float: left;
+		width: calc(100vw - (3vh * 7 * 2));
+		height: calc(100vh - ((3vh * 7) + 10px + 10px + 10px + 15px) - ((3vh * 7) + 10px + 10px + 10px + 15px) - 50px);
 		text-align: center;
 		z-index: 1;
-		background-color: #111111;
+		background-color: #dddddd;
+		padding-top: 50px;
 	}
 
 	/* status */
 		#status {
+			position: absolute;
+			top: calc((3vh * 7) + 10px + 10px + 10px + 15px);
+			left: 50%;
+			transform: translateX(-50%);
 			padding: 10px;
 			font-size: 20px;
+			margin: 5px;
 			height: 20px;
 			border-radius: 5px;
-			color: #ffffff;
+			color: #111111;
 			cursor: default;
-			display: inline-block;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			text-transform: uppercase;
+			font-weight: bold;
 		}
 
 		#begin {
-			padding: 5px;
-			font-size: 20px;
-			height: 20px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			padding: 10px;
+			font-size: 50px;
+			height: auto;
 			width: auto;
-			border-radius: 5px;
-			color: #111111;
+			border-radius: 20px;
+			color: #ffffff;
 			cursor: pointer;
 			user-select: none;
 			-webkit-user-select: none;
@@ -128,12 +338,15 @@
 			-ms-user-select: none;
 			-o-user-select: none;
 			display: inline-block;
-			margin-left: 20px;
-			background-color: #ffffff;
+			margin: 5px;
+			background-color: #222222;
+			box-shadow: 0px 0px 50px #111111;
+			z-index: 20;
+			outline: none;
 		}
 
 		#begin:hover {
-			background-color: #aaaaaa;
+			background-color: #111111;
 		}
 
 		#begin[disabled] {
@@ -143,297 +356,199 @@
 
 	/* cups */
 		#table-cups {
-			position: absolute;
-			height: calc((var(--size) * 10) - 20px);
-			top: 40px;
-			left: 0px;
-			width: calc(50vw - (var(--size) * 7) - 20px);
-			background: radial-gradient(#222222, #333333);
-			padding: 10px;
+			float: left;
+			height: calc(100vh - ((3vh * 7) + 10px + 10px + 10px + 15px) - ((3vh * 7) + 10px + 10px + 10px + 15px) - 50px - 10px);
+			min-width: calc(50vw - (3vh * 7) - 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			padding: 5px;
 			white-space: nowrap;
 			overflow: hidden;
 			overflow-x: scroll;
 		}
 
 		#table-cups:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
+			display: block;
+			text-align: center;
 			content: "look";
-			background-color: #222222;
-			color: #aaaaaa;
+			color: #333333;
 			border-radius: 5px;
-			padding: 10px;
-			font-size: 20px;
+			font-size: 15px;
 			height: 25px;
-			width: 50px;
-			transform: translateX(-50%) translateY(-50%);
+			width: 100%;
+			transform: translateY(300%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 	/* cards */
 		#table-cards {
-			position: absolute;
-			height: calc((var(--size) * 10) - 20px);
-			top: 40px;
-			left: calc(50vw - (var(--size) * 7));
-			width: calc(50vw - (var(--size) * 7) - 20px);
-			background: radial-gradient(#222222, #333333);
-			padding: 10px;
+			float: left;
+			height: calc(100vh - ((3vh * 7) + 10px + 10px + 10px + 15px) - ((3vh * 7) + 10px + 10px + 10px + 15px) - 50px - 10px);
+			min-width: calc(50vw - (3vh * 7) - 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			padding: 5px;
 			white-space: nowrap;
 			overflow: hidden;
 			overflow-x: scroll;
 		}
 
 		#table-cards:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
+			display: block;
+			text-align: center;
 			content: "play";
-			background-color: #222222;
-			color: #aaaaaa;
+			color: #333333;
 			border-radius: 5px;
-			padding: 10px;
-			font-size: 20px;
+			font-size: 15px;
 			height: 25px;
-			width: 50px;
-			transform: translateX(-50%) translateY(-50%);
-		}
-
-/*** pile ***/
-	#pile {
-		position: absolute;
-		width: calc(var(--size) * 7);
-		height: calc(var(--size) * 10);
-		bottom: calc(var(--size) * 10);
-		right: calc(var(--size) * 7);
-		text-align: center;
-		z-index: 2;
-		background-color: #333333;
-	}
-
-	#pile:after {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		content: "pile";
-		background-color: #222222;
-		color: #aaaaaa;
-		border-radius: 5px;
-		padding: 10px;
-		font-size: 20px;
-		height: 25px;
-		width: 50px;
-		transform: translateX(-50%) translateY(-50%);
-	}
-
-	/* cards */
-		#pile-cards {
-			position: absolute;
-			top: 0%;
-			left: 50%;
-			transform: translateX(-50%);
-			background-color: #ffffff;
-			border-radius: 10px;
-			border: 5px solid #222222;
-			width: calc(var(--size) * 7);
-			height: calc(var(--size) * 5);
-			color: #333333;
-			padding: 0px;
-			cursor: default;
-		}
-
-	/* cups */
-		#pile-cups {
-			position: absolute;
-			bottom: 0%;
-			left: 50%;
-			transform: translateX(-50%);
-			background-color: #333333;
-			border-radius: 10px;
-			border: 5px solid #222222;
-			width: calc(var(--size) * 7);
-			height: calc(var(--size) * 5);
-			color: #ffffff;
-			padding: 0px;
-			cursor: default;
-		}
-
-/*** deck ***/
-	#deck {
-		position: absolute;
-		width: calc(var(--size) * 7);
-		height: calc(var(--size) * 10);
-		bottom: calc(var(--size) * 10);
-		right: 0px;
-		text-align: center;
-		z-index: 2;
-		background-color: #333333;
-	}
-
-	#deck:after {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		content: "deck";
-		background-color: #222222;
-		color: #aaaaaa;
-		border-radius: 5px;
-		padding: 10px;
-		font-size: 20px;
-		height: 25px;
-		width: 50px;
-		transform: translateX(-50%) translateY(-50%);
-	}
-
-	/* cards */
-		#deck-cards {
-			position: absolute;
-			top: 0%;
-			left: 50%;
-			transform: translateX(-50%);
-			background-color: #ffffff;
-			border-radius: 10px;
-			border: 5px solid #222222;
-			width: calc(var(--size) * 7);
-			height: calc(var(--size) * 5);
-			color: #333333;
-			padding: 0px;
-			cursor: default;
-		}
-
-	/* cups */
-		#deck-cups {
-			position: absolute;
-			bottom: 0%;
-			left: 50%;
-			transform: translateX(-50%);
-			background-color: #333333;
-			border-radius: 10px;
-			border: 5px solid #222222;
-			width: calc(var(--size) * 7);
-			height: calc(var(--size) * 5);
-			color: #ffffff;
-			padding: 0px;
-			cursor: default;
+			width: 100%;
+			transform: translateY(300%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 /*** player ***/
 	#player {
-		position: absolute;
-		width: 100vw;
-		height: calc(var(--size) * 10);
+		float: left;
+		width: calc(100vw - 10px);
+		height: calc((3vh * 7) + 10px + 10px + 15px);
 		bottom: 0px;
-		text-align: center;
-		background-color: #111111;
+		background-color: #dddddd;
+		white-space: nowrap;
+		overflow: hidden;
+		overflow-x: scroll;
+		border: 5px solid #111111;
+		border-radius: 10px;
 	}
 
 	/* name */
 		#player .name {
-			width: auto;
-			text-align: center;
-			font-size: 20px;
 			display: inline-block;
-			height: 20px;
+			height: calc((3vh * 7));
+			width: calc((3vh * 5));
+			text-align: center;
+			font-size: 15px;
 			padding: 10px;
-			border-radius: 5px;
-			max-width: auto;
-			min-width: auto;
-			max-height: 20px;
-			min-height: 20px;
+			border-radius: 20px 20px 0px 0px;			
 			background-color: transparent;
-			color: #ffffff;
+			color: #111111;
 			resize: none;
+			text-transform: uppercase;
+			font-weight: bold;
 		}
 
 	/* cups */
 		#player .cups {
-			position: absolute;
-			width: calc(var(--size) * 6);
-			height: calc(var(--size) * 8);
-			left: 0px;
-			bottom: 0px;
-			background: radial-gradient(#222222, #333333);
-			white-space: nowrap;
-			overflow: hidden;
-			overflow-x: scroll;
+			display: inline-block;
+			min-width: calc((3vh * 5) + 10px);
+			width: auto;
+			height: calc((3vh * 7) + 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			padding: 5px;
+			vertical-align: top;
+			border-radius: 10px;
 		}
 
 		#player .cups:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
+			display: block;
+			text-align: center;
 			content: "cup";
-			background-color: #222222;
-			color: #aaaaaa;
+			color: #333333;
 			border-radius: 5px;
-			padding: 10px;
-			font-size: 20px;
+			font-size: 15px;
 			height: 25px;
-			width: 50px;
-			transform: translateX(-50%) translateY(-50%);
+			width: 100%;
+			transform: translateY(250%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 	/* immunities */
 		#player .immunities {
-			position: absolute;
-			width: calc(var(--size) * 12);
-			height: calc(var(--size) * 8);
-			left: calc(var(--size) * 6);
-			bottom: 0px;
-			background: radial-gradient(#222222, #333333);
-			white-space: nowrap;
-			overflow: hidden;
-			overflow-x: scroll;
+			display: inline-block;
+			min-width: calc((3vh * 5) + 10px);
+			width: auto;
+			height: calc((3vh * 7) + 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			padding: 5px;
+			vertical-align: top;
+			border-radius: 10px;
 		}
 
 		#player .immunities:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
+			display: block;
+			text-align: center;
 			content: "immunities";
-			background-color: #222222;
-			color: #aaaaaa;
+			color: #333333;
 			border-radius: 5px;
-			padding: 10px;
-			font-size: 20px;
+			font-size: 15px;
 			height: 25px;
-			width: 100px;
-			transform: translateX(-50%) translateY(-50%);
+			width: 100%;
+			transform: translateY(250%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 	/* cards */
 		#player .cards {
-			position: absolute;
-			width: calc(100vw - (var(--size) * 18));
-			height: calc(var(--size) * 8);
-			left: calc(var(--size) * 18);
-			bottom: 0px;
-			background: radial-gradient(#222222, #333333);
-			white-space: nowrap;
-			overflow: hidden;
-			overflow-x: scroll;
+			display: inline-block;
+			min-width: calc((3vh * 5) + 10px);
+			width: auto;
+			height: calc((3vh * 7) + 10px);
+			box-shadow: 0px 0px 10px #aaaaaa;
+			border-radius: 10px;
+			padding: 5px;
+			vertical-align: top;
+			border-radius: 10px;
 		}
 
 		#player .cards:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
+			display: block;
+			text-align: center;
 			content: "cards";
-			background-color: #222222;
-			color: #aaaaaa;
+			color: #333333;
 			border-radius: 5px;
-			padding: 10px;
-			font-size: 20px;
+			font-size: 15px;
 			height: 25px;
-			width: 50px;
-			transform: translateX(-50%) translateY(-50%);
+			width: 100%;
+			transform: translateY(250%);
+			opacity: 0.5;
+			pointer-events: none;
+			user-select: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
 		}
 
 /*** components ***/
 	/* cards */
 		.card {
-			width: calc(var(--size) * 5);
-			height: calc(var(--size) * 7);
+			width: calc(3vh * 5);
+			height: calc(3vh * 7);
 			display: inline-block;
 			border: 5px solid #222222;
 			border-radius: 5px;
@@ -508,8 +623,8 @@
 
 	/* cups */
 		.cup {
-			width: calc(var(--size) * 5);
-			height: calc(var(--size) * 7);
+			width: calc(3vh * 5);
+			height: calc(3vh * 7);
 			display: inline-block;
 			border: 5px solid #222222;
 			border-radius: 5px;
@@ -550,3 +665,10 @@
 			background-image: url(royalwine.png);
 		}
 
+	/* active */
+		.card[active="true"], .cup[active="true"] {
+			position: fixed;
+			box-shadow: 0px 0px 20px #111111;
+			z-index: 10;
+			cursor: grab;
+		}

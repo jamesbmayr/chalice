@@ -86,7 +86,6 @@
 
 								// card
 									case (/[.]png$/).test(request.url):
-									console.log(request.path)
 										try {
 											response.writeHead(200, {"Content-Type": "image/png"})
 											response.end(fs.readFileSync("./main/images/" + request.path[request.path.length - 1]), "binary")

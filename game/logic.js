@@ -169,18 +169,18 @@
 			try {
 				request.card   = null
 				request.origin = null
-				request.target = [request.post.target[0], request.post.target[1]]
+				request.target = request.post.target.split("-")
 
 				// check all spots
 					if (!request.card || !request.origin) {
-						var spots = Object.keys(request.game.spots)
+						var ids = Object.keys(request.game.spots)
 
 						for (var i = 0; i < ids.length; i++) {
 							if (!request.card || !request.origin) {
 								for (var j = 0; j < request.game.spots[ids[i]].cards.length; j++) {
 									if (request.game.spots[ids[i]].cards[j].id == request.post.card) {
 										request.card = request.game.spots[ids[i]].cards[j]
-										request.origin = [id[i], "cards"]
+										request.origin = [ids[i], "cards"]
 										break
 									}
 								}
@@ -236,7 +236,7 @@
 			try {
 				// no move
 					if ((request.origin[0] == request.target[0]) && (request.origin[1] == request.target[1])) {
-						callback({success: false, message: "no move"})
+						callback({success: true, message: "no move"})
 					}
 
 				// king
@@ -284,11 +284,11 @@
 								request.move = "drink"
 								enactMove(request, callback) // playing a cup while none are played
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkup") && activeLeft.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[1] == "table") && (request.target[1] == "cards")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkup") && activeLeft.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[1] == "table") && (request.target[1] == "cards")) {
 								request.move = "drinkup"
 								enactMove(request, callback) // make another player drink
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkupall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[1] == "table") && (request.target[1] == "cards")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkupall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[1] == "table") && (request.target[1] == "cards")) {
 								request.move = "drinkupall"
 								enactMove(request, callback) // make a player drink (all)
 							}
@@ -298,77 +298,77 @@
 								request.move = "immunity"
 								enactMove(request, callback) // moving an immunity or miracle from the table into the immunities section
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type == "steal") && (request.origin[0] !== request.player.id) && (request.card.form == "card") && allPlayers.includes(request.origin[0]) && (request.origin[1] == "cards") && (request.target[0] == request.player.id) && (request.target[1] == "cards")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type == "steal") && (request.origin[0] !== request.player.id) && (request.card.form == "card") && allPlayers.includes(request.origin[0]) && (request.origin[1] == "cards") && (request.target[0] == request.player.id) && (request.target[1] == "cards")) {
 								request.move = "stealcard"
 								enactMove(request, callback) // stealing a card from hand to hand
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type == "steal") && (request.origin[0] !== request.player.id) && (request.card.form == "card") && allPlayers.includes(request.origin[0]) && (request.origin[1] == "immunities") && (request.target[0] == request.player.id) && (request.target[1] == "immunities")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type == "steal") && (request.origin[0] !== request.player.id) && (request.card.form == "card") && allPlayers.includes(request.origin[0]) && (request.origin[1] == "immunities") && (request.target[0] == request.player.id) && (request.target[1] == "immunities")) {
 								request.move = "stealimmunity"
 								enactMove(request, callback) // stealing a card from immunities to immunities
 							}
 
 						// move a cup to look
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "look") && (request.card.form == "cup") && allPlayers.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "look") && (request.card.form == "cup") && allPlayers.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
 								request.move = "look"
 								enactMove(request, callback) // look at a cup
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchany") && (request.card.form == "cup") && activeLeft.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchany") && (request.card.form == "cup") && activeLeft.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
 								request.move = "lookswitchany"
 								enactMove(request, callback) // switch any - look
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchleft") && (request.card.form == "cup") && (request.origin[0] == activeLeft[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchleft") && (request.card.form == "cup") && (request.origin[0] == activeLeft[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
 								request.move = "lookswitchleft"
 								enactMove(request, callback) // switch left - look
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchright") && (request.card.form == "cup") && (request.origin[0] == activeRight[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchright") && (request.card.form == "cup") && (request.origin[0] == activeRight[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
 								request.move = "lookswitchright"
 								enactMove(request, callback) // switch right - look
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchclockwise") && (request.card.form == "cup") && (request.origin[0] == activeRight[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchclockwise") && (request.card.form == "cup") && (request.origin[0] == activeRight[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
 								request.move = "lookswitchclockwise"
 								enactMove(request, callback) // switch cw - look
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchcounterclockwise") && (request.card.form == "cup") && (request.origin[0] == activeLeft[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchcounterclockwise") && (request.card.form == "cup") && (request.origin[0] == activeLeft[0]) && (request.origin[1] == "cups") && (request.target[0] == "table") && (request.target[1] == "cups") && !request.game.spots.table.cups.length) {
 								request.move = "lookswitchcounterclockwise"
 								enactMove(request, callback) // switch ccw - look
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "redistribute") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") &&  (request.target[0] == "table") && (request.target[1] == "cups")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "redistribute") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") &&  (request.target[0] == "table") && (request.target[1] == "cups")) {
 								request.move = "lookredistribute"
 								enactMove(request, callback) // redistribute - look
 							}
 
 						// move a card from look
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "look") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "look") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
 								request.move = "unlook"
 								enactMove(request, callback) // put cup back
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchany") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchany") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
 								request.move = "switchany"
 								enactMove(request, callback) // switch any
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchleft") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchleft") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
 								request.move = "switchleft"
 								enactMove(request, callback) // switch left
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchright") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchright") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
 								request.move = "switchright"
 								enactMove(request, callback) // switch right
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchclockwise") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchclockwise") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
 								request.move = "switchclockwise"
 								enactMove(request, callback) // switch cw
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchcounterclockwise") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "switchcounterclockwise") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id) && (request.target[1] == "cups")) {
 								request.move = "switchcounterclockwise"
 								enactMove(request, callback) // switch ccw
 							}
-							else if (!request.game.state.acted && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "redistribute") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id || activeLeft.includes(request.target[0])) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "redistribute") && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.target[0] == request.player.id || activeLeft.includes(request.target[0])) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
 								request.move = "redistribute"
 								enactMove(request, callback) // redistribute
 							}
 
 						// return cup
-							else if (!request.game.state.acted && ["switchany", "switchleft", "switchright", "switchclockwise", "switchcounterclockwise"].includes(request.game.spots.table.cards[0].type.replace(/\s/g, "")) && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.card.form == "cup") && activeLeft.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && ["switchany", "switchleft", "switchright", "switchclockwise", "switchcounterclockwise"].includes(request.game.spots.table.cards[0].type.replace(/\s/g, "")) && (request.origin[0] == "table") && (request.origin[1] == "cups") && (request.card.form == "cup") && activeLeft.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
 								request.move = "cancelswitch"
 								enactMove(request, callback) // cancel switch
 							}
@@ -378,7 +378,7 @@
 							}
 
 						// end turn
-							else if (request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards")) {
+							else if ((request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards")) {
 								request.move = "discardend"
 								enactMove(request, callback) // discarding action to end turn
 							}
@@ -438,7 +438,7 @@
 							case "switchleft":
 							case "switchright":
 								var opponent = getActiveOpponents(request).find(function (o) {
-									return !request.game.spots[opponents[o]].cups.length
+									return !request.game.spots[o].cups.length
 								})
 
 								completeMove(request.player.cups[0], request.game.spots[request.player.id].cups, request.game.spots[opponent].cups)
@@ -476,8 +476,15 @@
 							case "immunity":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
 
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " now has " + request.card.type
-								request.game.state.acted = true
+								var opponents = getActiveOpponents(request, "left")
+								request.game.state.turn = opponents[0] || request.session.id
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn"
+								request.game.state.acted = false
+
+								if (isRoundEnd(request)) {
+									request.game.state.status = "the round ends"
+									request.game.state.begin = true
+								}
 							break
 
 						// steal
@@ -641,9 +648,18 @@
 
 				// first round
 					if (!request.game.state.round) {
-						request.game.state.round = 1
+						request.game.state.start = new Date().getTime()
+						request.game.state.round = 1						
 
-						// deal 4 cards and 1 cup
+						// put royal wine first
+							var royalwine = request.game.spots.deck.cups.find(function (c) {
+								return c.type.replace(/\s/g, "") == "royalwine"
+							})
+							request.game.spots.deck.cups.splice(request.game.spots.deck.cups.indexOf(royalwine), 1)
+							request.game.spots.deck.cups.unshift(royalwine)
+
+						// deal 4 cards and 1 cup each
+							allPlayers = main.sortRandom(allPlayers)
 							for (var i = 0; i < allPlayers.length; i++) {
 								completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, request.game.spots[allPlayers[i]].cards)
 								completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, request.game.spots[allPlayers[i]].cards)
@@ -654,8 +670,8 @@
 							}
 
 						// choose random player to begin
-							var players = main.sortRandom(allPlayers)
-							request.game.state.turn = players[0]
+							allPlayers = main.sortRandom(allPlayers)
+							request.game.state.turn = allPlayers[0]
 					}
 
 				// subsequent rounds
@@ -664,7 +680,13 @@
 							for (var i = 0; i < allPlayers.length; i++) {
 								if (request.game.spots[allPlayers[i]].cups.length) {
 									request.game.spots[allPlayers[i]].cups[0].face = "down"
-									completeMove(request.game.spots[allPlayers[i]].cups[0], request.game.spots[allPlayers[i]].cups, request.game.spots.pile.cups)
+
+									if (request.game.spots[allPlayers[i]].cups[0].type.replace(/\s/g, "") == "royalwine") {
+										completeMove(request.game.spots[allPlayers[i]].cups[0], request.game.spots[allPlayers[i]].cups, request.game.spots.table.cards)
+									}
+									else {
+										completeMove(request.game.spots[allPlayers[i]].cups[0], request.game.spots[allPlayers[i]].cups, request.game.spots.pile.cups)
+									}
 								}
 							}
 
@@ -699,10 +721,10 @@
 									}
 
 								// move cups to center
-									if (allPlayers.length > request.game.spots.deck.cups.length) {
+									if (allPlayers.length - 1 > request.game.spots.deck.cups.length) {
 										shufflePile(request, "cups")
 
-										for (var i = 0; i < allPlayers.length; i++) {
+										for (var i = 0; i < allPlayers.length - 1; i++) {
 											completeMove(request.game.spots.deck.cups[0], request.game.spots.deck.cups, request.game.spots.table.cards)
 										}
 									}
@@ -865,10 +887,10 @@
 			}
 
 			if (players.length) {
-				return true
+				return false
 			}
 			else {
-				return false
+				return true
 			}
 		}
 
