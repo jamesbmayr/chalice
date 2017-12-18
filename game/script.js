@@ -29,12 +29,12 @@
 			// cups
 				var cupsBlock = '<div class="cups" id="' + person.id + '-cups">'
 				for (var c = 0; c < person.cups.length; c++) {
-					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cards[c].type : "") + '" id="' + person.cups[c].id + '"></div>'
+					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cups[c].type : "") + '" id="' + person.cups[c].id + '"></div>'
 				}
 				cupsBlock += '</div>'
 
 			// name
-				var nameBlock = '<textarea class="name" ' + (person.id == player ? "" : "disabled") + '>'
+				var nameBlock = '<textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="name" ' + (person.id == player ? "" : "disabled") + '>'
 					+ (person.name || "player " + (person.seat))
 				+ '</textarea>'
 
@@ -63,50 +63,46 @@
 					+ '<button id="pile-cups"  class="cups" >' + game.spots.pile.cups.length + '</button>'
 				+ '</div>'
 
-			// table
-				var tableBlock = ''
-				var begin = game.state.begin ? "" : " disabled"
-
+			// status
 				if (!game.state.start) {
-					tableBlock += '<div id="status">game has not started</div>'
+					var tableBlock = '<div id="status">game has not started</div>'
 					+ '<button id="begin"' + begin + '>begin round</button>'
 					+ '<div id="table-cups"  class="cups" ></div>'
 					+ '<div id="table-cards" class="cards"></div>'
 				}
 				else if (game.state.end) {
-					tableBlock += '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
+					var tableBlock = '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
 					+ '<button id="begin"' + begin + '>begin round</button>'
 					+ '<div id="table-cups"  class="cups" ></div>'
 					+ '<div id="table-cards" class="cards"></div>'
 				}
-				else {
-					if (turn !== player) {
-						tableBlock += '<div id="status">' + (game.state.status || ((game.spots[game.state.turn].name || ("player " + game.spots[game.state.turn].seat)) + "'s turn")) + '</div>'
-					}
-					else {
-						tableBlock += '<div id="status">' + (game.state.status || "your turn") + '</div>'
-					}
-
-					tableBlock += '<button id="begin"' + begin + '>begin round</button>'
-
-					// cups
-						var cupsBlock = '<div id="table-cups" class="cups">'
-						for (var c in game.spots.table.cups) {
-							var cup = game.spots.table.cups[c]
-							cupsBlock += '<div class="cup" face="' + (turn == player ? "front" : "back") + '" type="' + (turn == player ? cup.type.replace(/\s/g, "") : "") + '" id="' + cup.id + '"></div>'
-						}
-						cupsBlock += "</div>"
-					tableBlock += cupsBlock
-
-					// cards
-						var cardsBlock = '<div id="table-cards" class="cards">'
-						for (var c in game.spots.table.cards) {
-							var card = game.spots.table.cards[c]
-							cardsBlock += '<div class="card" face="front" type="' + card.type.replace(/\s/g, "") + '" id="' + card.id + '"></div>'
-						}
-						cardsBlock += "</div>"
-					tableBlock += cardsBlock
+				else if (turn !== player) {
+					var tableBlock = '<div id="status">' + (game.state.status || ((game.spots[game.state.turn].name || ("player " + game.spots[game.state.turn].seat)) + "'s turn")) + '</div>'
 				}
+				else {
+					var tableBlock = '<div id="status">' + (game.state.status || "your turn") + '</div>'
+				}
+
+			// status
+				tableBlock += '<button id="begin"' + (game.state.begin ? "" : " disabled") + '>begin round</button>'
+
+			// cups
+				var cupsBlock = '<div id="table-cups" class="cups">'
+				for (var c in game.spots.table.cups) {
+					var cup = game.spots.table.cups[c]
+					cupsBlock += '<div class="cup" face="' + (turn == player ? "front" : "back") + '" type="' + (turn == player ? cup.type.replace(/\s/g, "") : "") + '" id="' + cup.id + '"></div>'
+				}
+				cupsBlock += "</div>"
+				tableBlock += cupsBlock
+
+			// cards
+				var cardsBlock = '<div id="table-cards" class="cards">'
+				for (var c in game.spots.table.cards) {
+					var card = game.spots.table.cards[c]
+					cardsBlock += '<div class="card" face="front" type="' + card.type.replace(/\s/g, "") + '" id="' + card.id + '"></div>'
+				}
+				cardsBlock += "</div>"
+				tableBlock += cardsBlock
 
 			// combination
 				return deckBlock + pileBlock + '<div id="table">' + tableBlock + '</div>'
@@ -133,6 +129,13 @@
 				var cards = Array.from(document.querySelectorAll(".card")).concat(Array.from(document.querySelectorAll(".cup")))
 				for (var c in cards) { cards[c].addEventListener("mousedown", selectCard) }
 
+			// update stats
+				round = game.state.round
+				board.setAttribute("round", round)
+
+				turn  = game.state.turn
+				board.setAttribute("turn",  turn)
+
 			// check for game end
 				if (game.state.end) {
 					clearInterval(fetchLoop)
@@ -155,9 +158,8 @@
 					activeX = x - event.target.getBoundingClientRect().left
 					activeY = y - event.target.getBoundingClientRect().top
 					active.setAttribute("active", true)
-					active.style.left = activeX + "px"
-					active.style.top  = activeY + "px"
-					console.log(active)
+					active.style.left = x - activeX + "px"
+					active.style.top  = y - activeY + "px"
 			}
 
 		}

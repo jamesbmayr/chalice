@@ -65,13 +65,13 @@
 					request.game.spots.deck.cards = main.sortRandom(request.game.spots.deck.cards)
 
 				// create cups
-					for (var i = 0; i < 1; i++) {  request.game.spots.deck.cups.push( getCup("royalwine")) }
-					for (var i = 0; i < 3; i++) {  request.game.spots.deck.cups.push( getCup("wine")) }
-					for (var i = 0; i < 4; i++) {  request.game.spots.deck.cups.push( getCup("water")) }
-					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("arsenic")) }
-					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("cyanide")) }
-					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("hemlock")) }
-					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push( getCup("nightshade")) }
+					for (var i = 0; i < 1; i++) {  request.game.spots.table.cards.push(getCup("royalwine")) }
+					for (var i = 0; i < 3; i++) {  request.game.spots.deck.cups.push(getCup("wine")) }
+					for (var i = 0; i < 4; i++) {  request.game.spots.deck.cups.push(getCup("water")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push(getCup("arsenic")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push(getCup("cyanide")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push(getCup("hemlock")) }
+					for (var i = 0; i < 2; i++) {  request.game.spots.deck.cups.push(getCup("nightshade")) }
 
 					request.game.spots.deck.cups  = main.sortRandom(request.game.spots.deck.cups )
 
@@ -148,17 +148,19 @@
 						}
 						else {
 							request.game = games[0]
-							var player = createPlayer(request)
 
-							var set  = {}
-								set.updated = new Date().getTime()
-								set["spots." + request.session.id] = player
+							// create player
+								var player = createPlayer(request)
+								request.game.spots[request.session.id] = player
+								if (player.seat > 1) {
+									request.game.state.begin = true
+								}
 
-							if (player.seat > 1) {
-								set["state.begin"] = true
-							}
+							// move a cup
+								game.completeMove(request.game.spots.deck.cups[0], request.game.spots.deck.cups, request.game.spots.table.cards)
 
-							main.storeData("games", {id: request.game.id}, {$set: set}, {}, function (data) {
+							request.game.state.updated = new Date().getTime()
+							main.storeData("games", {id: request.game.id}, request.game, {}, function (data) {
 								if (!data) {
 									callback({success: false, message: "unable to join this game"})
 								}

@@ -61,6 +61,7 @@
 			resize: none;
 			text-transform: uppercase;
 			font-weight: bold;
+			cursor: default;
 		}
 
 	/* cups */
@@ -318,6 +319,7 @@
 			-o-user-select: none;
 			text-transform: uppercase;
 			font-weight: bold;
+			width: 100%;
 		}
 
 		#begin {
@@ -561,63 +563,63 @@
 			background-image: url(cardback.png);
 		}
 
-		.card[face="front"][type="switchany"] {
+		[face="front"][type="switchany"] {
 			background-image: url(switchany.png);
 		}
 
-		.card[face="front"][type="switchleft"] {
+		[face="front"][type="switchleft"] {
 			background-image: url(switchleft.png);
 		}
 
-		.card[face="front"][type="switchright"] {
+		[face="front"][type="switchright"] {
 			background-image: url(switchright.png);
 		}
 
-		.card[face="front"][type="switchclockwise"] {
+		[face="front"][type="switchclockwise"] {
 			background-image: url(switchclockwise.png);
 		}
 
-		.card[face="front"][type="switchcounterclockwise"] {
+		[face="front"][type="switchcounterclockwise"] {
 			background-image: url(switchcounterclockwise.png);
 		}
 
-		.card[face="front"][type="look"] {
+		[face="front"][type="look"] {
 			background-image: url(look.png);
 		}
 
-		.card[face="front"][type="steal"] {
+		[face="front"][type="steal"] {
 			background-image: url(steal.png);
 		}
 
-		.card[face="front"][type="drinkup"] {
+		[face="front"][type="drinkup"] {
 			background-image: url(drinkup.png);
 		}
 
-		.card[face="front"][type="drinkall"] {
+		[face="front"][type="drinkall"] {
 			background-image: url(drinkall.png);
 		}
 
-		.card[face="front"][type="redistribute"] {
+		[face="front"][type="redistribute"] {
 			background-image: url(redistribute.png);
 		}
 
-		.card[face="front"][type="miracle"] {
+		[face="front"][type="miracle"] {
 			background-image: url(miracle.png);
 		}
 
-		.card[face="front"][type="arsenicimmunity"] {
+		[face="front"][type="arsenicimmunity"] {
 			background-image: url(arsenicimmunity.png);
 		}
 
-		.card[face="front"][type="cyanideimmunity"] {
+		[face="front"][type="cyanideimmunity"] {
 			background-image: url(cyanideimmunity.png);
 		}
 
-		.card[face="front"][type="hemlockimmunity"] {
+		[face="front"][type="hemlockimmunity"] {
 			background-image: url(hemlockimmunity.png);
 		}
 
-		.card[face="front"][type="nightshadeimmunity"] {
+		[face="front"][type="nightshadeimmunity"] {
 			background-image: url(nightshadeimmunity.png);
 		}
 
@@ -637,31 +639,31 @@
 			background-image: url(cupback.png);
 		}
 
-		.cup[face="front"][type="arsenic"] {
+		[face="front"][type="arsenic"] {
 			background-image: url(arsenic.png);
 		}
 
-		.cup[face="front"][type="cyanide"] {
+		[face="front"][type="cyanide"] {
 			background-image: url(cyanide.png);
 		}
 
-		.cup[face="front"][type="hemlock"] {
+		[face="front"][type="hemlock"] {
 			background-image: url(hemlock.png);
 		}
 
-		.cup[face="front"][type="nightshade"] {
+		[face="front"][type="nightshade"] {
 			background-image: url(nightshade.png);
 		}
 
-		.cup[face="front"][type="water"] {
+		[face="front"][type="water"] {
 			background-image: url(water.png);
 		}
 
-		.cup[face="front"][type="wine"] {
+		[face="front"][type="wine"] {
 			background-image: url(wine.png);
 		}
 
-		.cup[face="front"][type="royalwine"] {
+		[face="front"][type="royalwine"] {
 			background-image: url(royalwine.png);
 		}
 

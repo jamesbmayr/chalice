@@ -104,9 +104,6 @@
 						else if ((games[0].state.turn !== request.session.id) && (!games[0].spots[request.session.id].king || games[0].state.turn)) {
 							callback({success: false, message: "not your turn"})
 						}
-						else if (!games[0].spots[request.session.id].active && (!games[0].spots[request.session.id].king || games[0].state.turn)) {
-							callback({success: false, message: "not active"})
-						}
 						else if (Object.keys(games[0].spots).filter(function (p) { return games[0].spots[p].debt }).length && !games[0].spots[request.session.id].debt) {
 							callback({success: false, message: "waiting on opponent to discard cards"})
 						}
@@ -236,7 +233,7 @@
 			try {
 				// no move
 					if ((request.origin[0] == request.target[0]) && (request.origin[1] == request.target[1])) {
-						callback({success: true, message: "no move"})
+						callback({success: false, message: "no move"})
 					}
 
 				// king
@@ -284,11 +281,11 @@
 								request.move = "drink"
 								enactMove(request, callback) // playing a cup while none are played
 							}
-							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkup") && activeLeft.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[1] == "table") && (request.target[1] == "cards")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkup") && activeLeft.includes(request.origin[0]) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[0] == "table") && (request.target[1] == "cards")) {
 								request.move = "drinkup"
 								enactMove(request, callback) // make another player drink
 							}
-							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkupall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[1] == "table") && (request.target[1] == "cards")) {
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkupall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[0] == "table") && (request.target[1] == "cards")) {
 								request.move = "drinkupall"
 								enactMove(request, callback) // make a player drink (all)
 							}
@@ -378,7 +375,7 @@
 							}
 
 						// end turn
-							else if ((request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards")) {
+							else if ((request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards") && !request.game.spots.table.cups.length && (request.game.spots.table.cards.length == 1)) {
 								request.move = "discardend"
 								enactMove(request, callback) // discarding action to end turn
 							}
@@ -452,9 +449,10 @@
 								var players = [request.player.id]
 									players.concat(getActiveOpponents(request, "left"))
 
-								for (var i = 0; i < players.length; i++) {
-									completeMove(request.game.spots[players[i]].cups[0], request.game.spots[players[i]].cups, request.game.spots[players[(i + 1 < players.length ? i + 1 : 0)]].cups)	
+								for (var i = 0; i < players.length - 1; i++) {
+									completeMove(request.game.spots[players[i]].cups[0], request.game.spots[players[i]].cups, request.game.spots[players[i + 1]].cups)	
 								}
+								completeMove(request.card, request.game.spots.table.cups, request.player.cups)
 
 								request.game.state.status = (request.player.name || "player " + request.player.seat) + " switches cups clockwise"
 								request.game.state.acted = true
@@ -464,9 +462,10 @@
 								var players = [request.player.id]
 									players.concat(getActiveOpponents(request, "right"))
 
-								for (var i = 0; i < players.length; i++) {
-									completeMove(request.game.spots[players[i]].cups[0], request.game.spots[players[i]].cups, request.game.spots[players[(i + 1 < players.length ? i + 1 : 0)]].cups)	
+								for (var i = 0; i < players.length - 1; i++) {
+									completeMove(request.game.spots[players[i]].cups[0], request.game.spots[players[i]].cups, request.game.spots[players[i + 1]].cups)	
 								}
+								completeMove(request.card, request.game.spots.table.cups, request.player.cups)
 
 								request.game.state.status = (request.player.name || "player " + request.player.seat) + " switches cups counterclockwise"
 								request.game.state.acted = true
@@ -478,7 +477,7 @@
 
 								var opponents = getActiveOpponents(request, "left")
 								request.game.state.turn = opponents[0] || request.session.id
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn"
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn; " + (request.game.spots[request.game.state.turn].name || "player " + request.game.spots[request.game.state.turn].seat) + "'s turn"
 								request.game.state.acted = false
 
 								if (isRoundEnd(request)) {
@@ -533,14 +532,14 @@
 						// drinkup / drinkupall
 							case "drinkup":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
-								resolveDrink(request.card, request.game.spots[request.origin[0]])
+								resolveDrink(request.card, request.game.spots[request.origin[0]], request)
 
 								request.game.state.status = (request.player.name || "player " + request.player.seat) + " makes " + (request.game.spots[request.origin[0]].name || "player " + request.game.spots[request.origin[0]].seat) + " drink " + request.card.type
 							break
 
 							case "drinkupall":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
-								resolveDrink(request.card, request.game.spots[request.origin[0]])
+								resolveDrink(request.card, request.game.spots[request.origin[0]], request)
 
 								request.game.state.status = (request.player.name || "player " + request.player.seat) + " makes " + (request.game.spots[request.origin[0]].name || "player " + request.game.spots[request.origin[0]].seat) + " drink " + request.card.type
 							break
@@ -563,7 +562,7 @@
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
 								var opponents = getActiveOpponents(request, "left")
 								request.game.state.turn = opponents[0] || request.session.id
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn"
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn; " + (request.game.spots[request.game.state.turn].name || "player " + request.game.spots[request.game.state.turn].seat) + "'s turn"
 								request.game.state.acted = false
 
 								if (isRoundEnd(request)) {
@@ -575,7 +574,7 @@
 						// drink
 							case "drink":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
-								resolveDrink(request.card, request.player)
+								resolveDrink(request.card, request.player, request)
 								
 								request.game.state.status = (request.player.name || "player " + request.player.seat) + " drinks " + request.card.type
 								request.game.state.acted = true
@@ -585,7 +584,7 @@
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
 								var opponents = getActiveOpponents(request, "left")
 								request.game.state.turn = opponents[0] || request.session.id
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn"
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " ends turn; " + (request.game.spots[request.game.state.turn].name || "player " + request.game.spots[request.game.state.turn].seat) + "'s turn"
 								request.game.state.acted = false
 
 								if (isRoundEnd(request)) {
@@ -651,13 +650,6 @@
 						request.game.state.start = new Date().getTime()
 						request.game.state.round = 1						
 
-						// put royal wine first
-							var royalwine = request.game.spots.deck.cups.find(function (c) {
-								return c.type.replace(/\s/g, "") == "royalwine"
-							})
-							request.game.spots.deck.cups.splice(request.game.spots.deck.cups.indexOf(royalwine), 1)
-							request.game.spots.deck.cups.unshift(royalwine)
-
 						// deal 4 cards and 1 cup each
 							allPlayers = main.sortRandom(allPlayers)
 							for (var i = 0; i < allPlayers.length; i++) {
@@ -666,7 +658,7 @@
 								completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, request.game.spots[allPlayers[i]].cards)
 								completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, request.game.spots[allPlayers[i]].cards)
 
-								completeMove(request.game.spots.deck.cups[0],  request.game.spots.deck.cups,  request.game.spots[allPlayers[i]].cups)
+								completeMove(request.game.spots.table.cards[0],request.game.spots.table.cards,request.game.spots[allPlayers[i]].cups)
 							}
 
 						// choose random player to begin
@@ -833,7 +825,7 @@
 
 	/* resolveDrink */
 		module.exports.resolveDrink = resolveDrink
-		function resolveDrink(player, cup) {
+		function resolveDrink(cup, player, request) {
 			// get data
 				var type = cup.type.replace(/\s/g, "")
 				
@@ -848,7 +840,7 @@
 						type = "water"
 					}
 					else {
-						cup.face == "front"
+						cup.face = "front"
 						player.debt = 2
 						player.active = false
 					}
@@ -860,14 +852,14 @@
 						type = "wine"
 					}
 					else {
-						cup.face == "front"
+						cup.face = "front"
 						player.active = false
 					}
 				}
 
 			// wines
 				if (["wine", "royalwine"].includes(type)) {
-					cup.face == "front"
+					cup.face = "front"
 					player.active = false
 					completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
 					completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
