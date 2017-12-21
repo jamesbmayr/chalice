@@ -29,7 +29,7 @@
 			// cups
 				var cupsBlock = '<div class="cups" id="' + person.id + '-cups">'
 				for (var c = 0; c < person.cups.length; c++) {
-					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cups[c].type : "") + '" id="' + person.cups[c].id + '"></div>'
+					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cups[c].type.replace(/\s/g, "") : "") + '" id="' + person.cups[c].id + '"></div>'
 				}
 				cupsBlock += '</div>'
 
@@ -41,8 +41,8 @@
 			// combined
 				var personBlock = '<div class="' + (person.id == player ? "player" : "opponent") + '" turn="' + (turn == person.seat ? "true" : "false") + '" id="' + person.id + '">'
 					+ nameBlock
-					+ cupsBlock
 					+ immunitiesBlock
+					+ cupsBlock
 					+ cardsBlock
 				+ '</div>'
 
@@ -65,16 +65,10 @@
 
 			// status
 				if (!game.state.start) {
-					var tableBlock = '<div id="status">game has not started</div>'
-					+ '<button id="begin"' + begin + '>begin round</button>'
-					+ '<div id="table-cups"  class="cups" ></div>'
-					+ '<div id="table-cards" class="cards"></div>'
+					var tableBlock = '<div id="status">game has not started; join code: ' + game.id.slice(0, 4) + '</div>'
 				}
 				else if (game.state.end) {
-					var tableBlock = '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '!</div>'
-					+ '<button id="begin"' + begin + '>begin round</button>'
-					+ '<div id="table-cups"  class="cups" ></div>'
-					+ '<div id="table-cards" class="cards"></div>'
+					var tableBlock = '<div id="status">victory for ' + game.state.victor.name.join(" and ") + '! <a href="../../">play again?</a></div>'
 				}
 				else if (turn !== player) {
 					var tableBlock = '<div id="status">' + (game.state.status || ((game.spots[game.state.turn].name || ("player " + game.spots[game.state.turn].seat)) + "'s turn")) + '</div>'
@@ -120,6 +114,13 @@
 					document.getElementById(opponents[o]).outerHTML = buildPerson(game.spots[opponents[o]]) || ""
 				}
 
+			// update stats
+				round = game.state.round
+				board.setAttribute("round", round)
+
+				turn  = game.state.turn
+				board.setAttribute("turn",  turn)
+
 			// update table
 				document.getElementById("deck").remove()
 				document.getElementById("pile").remove()
@@ -129,12 +130,7 @@
 				var cards = Array.from(document.querySelectorAll(".card")).concat(Array.from(document.querySelectorAll(".cup")))
 				for (var c in cards) { cards[c].addEventListener("mousedown", selectCard) }
 
-			// update stats
-				round = game.state.round
-				board.setAttribute("round", round)
-
-				turn  = game.state.turn
-				board.setAttribute("turn",  turn)
+				document.getElementById("begin").addEventListener("click", submitBegin)
 
 			// check for game end
 				if (game.state.end) {
@@ -292,7 +288,7 @@
 				if (!response.success) {
 					displayError(response.message || "unable to fetch data...")
 				}
-				else if (response.game.state.round !== round || response.game.state.turn !== turn) {
+				else if ((response.game.state.round !== round || response.game.state.turn !== turn) && (!active)) {
 					buildEverything(response.game)
 				}
 			})

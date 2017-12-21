@@ -101,7 +101,7 @@
 						else if (!games[0].spots[request.session.id]) {
 							callback({success: false, message: "not a player of this game"})
 						}
-						else if ((games[0].state.turn !== request.session.id) && (!games[0].spots[request.session.id].king || games[0].state.turn)) {
+						else if ((games[0].state.turn !== request.session.id) && (!games[0].spots[request.session.id].king || games[0].state.turn) && games[0].spots[request.session.id].active) {
 							callback({success: false, message: "not your turn"})
 						}
 						else if (Object.keys(games[0].spots).filter(function (p) { return games[0].spots[p].debt }).length && !games[0].spots[request.session.id].debt) {
@@ -231,47 +231,67 @@
 		module.exports.identifyMove = identifyMove
 		function identifyMove(request, callback) {
 			try {
+				var activeRight = getActiveOpponents(request, "right")
+				var activeLeft  = getActiveOpponents(request, "left")
+				var allPlayers  = getAllPlayers(request, "left")
+
 				// no move
 					if ((request.origin[0] == request.target[0]) && (request.origin[1] == request.target[1])) {
 						callback({success: false, message: "no move"})
 					}
 
 				// king
-					else if ((request.game.state.turn == false) && (request.player.king)) {
-						if ((request.origin[0] == "table") && (request.origin[1] == "cups") && (getAllPlayers(request).includes(request.target[0])) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
-							request.move = "kingdistribute"
-							enactMove(request, callback) // distributing cups while king
-						}
-						else if ((request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && (request.origin[0] == "table") && (request.target[1] == "cups")) {
-							request.move = "kingpredistribute"
-							enactMove(request, callback) // moving from cards to cups while king
-						}
-						else {
-							callback({success: false, message: "illegal move"})
-						}
+					else if ((request.game.state.turn == request.player.id) && (request.player.king)) {
+						// distribute
+							if ((request.origin[0] == "table") && (request.origin[1] == "cups") && (getAllPlayers(request).includes(request.target[0])) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length) {
+								request.move = "kingdistribute"
+								enactMove(request, callback) // distributing cups while king
+							}
+							else if ((request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && (request.target[0] == "table") && (request.target[1] == "cups")) {
+								request.move = "kingpredistribute"
+								enactMove(request, callback) // moving from cards to cups while king
+							}
+
+						// others
+							else {
+								callback({success: false, message: "illegal move"})
+							}
 					}
 
 				// post drink
 					else if (!request.player.active) {
-						if (request.player.debt && (request.origin[0] == request.player.id) && (request.target[0] == "pile") && (request.target[1] == "cards")) {
-							request.move = "discarddead"
-							enactMove(request, callback) // discarding a card while poisoned
-						}
-						else if (request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && (request.target[0] == request.player.id) && (request.target[1] == "cups") && (!request.player.debt)) {
-							request.move = "cupend"
-							enactMove(request, callback) // returning cup to deactivate
-						}
-						else {
-							callback({success: false, message: "illegal move"})
-						}
+						// ending turn
+							if (request.player.debt && (request.origin[0] == request.player.id) && (request.target[0] == "pile") && (request.target[1] == "cards")) {
+								request.move = "discarddead"
+								enactMove(request, callback) // discarding a card while poisoned
+							}
+							else if (request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && (request.target[0] == request.player.id) && (request.target[1] == "cups") && (!request.player.debt)) {
+								request.move = "cupend"
+								enactMove(request, callback) // returning cup to deactivate
+							}
+
+						// drinkall
+							else if ((request.player.id == request.game.state.turn) && !request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[0] == "table") && (request.target[1] == "cards")) {
+								request.move = "drinkall"
+								enactMove(request, callback) // make a player drink (all)
+							}
+							else if ((request.player.id == request.game.state.turn) && !request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length && !request.game.spots[request.target[0]].debt) {
+								request.move = "cupback"
+								enactMove(request, callback) // returning cup to opponent after drinkup / drinkall
+							}
+							else if ((request.player.id == request.game.state.turn) && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards") && !request.game.spots.table.cups.length && (request.game.spots.table.cards.length == 1)) {
+								request.move = "discardend"
+								enactMove(request, callback) // discarding action to end turn
+							}
+
+						// others
+							else {
+								callback({success: false, message: "illegal move"})
+							}
 					}
 
 				// actions
-					else if ((request.player.id == request.game.state.turn) && (request.player.active)) {
-						var activeRight = getActiveOpponents(request, "right")
-						var activeLeft  = getActiveOpponents(request, "left")
-						var allPlayers  = getAllPlayers(request, "left")
-
+					else if ((request.player.id == request.game.state.turn) && request.player.active) {
 						// play a card or cup
 							if (!request.game.state.acted && (request.origin[0] == request.player.id) && (request.origin[1] == "cards") && (request.target[0] == "table") && (request.target[1] == "cards") && !request.game.spots.table.cards.length && !request.game.spots.table.cups.length) {
 								request.move = "play"
@@ -285,8 +305,8 @@
 								request.move = "drinkup"
 								enactMove(request, callback) // make another player drink
 							}
-							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkupall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[0] == "table") && (request.target[1] == "cards")) {
-								request.move = "drinkupall"
+							else if (!request.game.state.acted && request.game.spots.table.cards.length && (request.game.spots.table.cards[0].type.replace(/\s/g, "") == "drinkall") && (request.origin[0] == request.player.id || activeLeft.includes(request.origin[0])) && (request.origin[1] == "cups") && (request.card.form == "cup") && (request.target[0] == "table") && (request.target[1] == "cards")) {
+								request.move = "drinkall"
 								enactMove(request, callback) // make a player drink (all)
 							}
 
@@ -369,9 +389,9 @@
 								request.move = "cancelswitch"
 								enactMove(request, callback) // cancel switch
 							}
-							else if (!request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length && !request.game.spots[request.target[0]].debt) {
+							else if (!request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length && request.game.spots[request.target[0]].debt) {
 								request.move = "cupback"
-								enactMove(request, callback) // returning cup to opponent after drinkup / drinkupall
+								enactMove(request, callback) // returning cup to opponent after drinkup / drinkall
 							}
 
 						// end turn
@@ -447,7 +467,7 @@
 
 							case "switchclockwise":
 								var players = [request.player.id]
-									players.concat(getActiveOpponents(request, "left"))
+									players = players.concat(getActiveOpponents(request, "left"))
 
 								for (var i = 0; i < players.length - 1; i++) {
 									completeMove(request.game.spots[players[i]].cups[0], request.game.spots[players[i]].cups, request.game.spots[players[i + 1]].cups)	
@@ -460,7 +480,7 @@
 
 							case "switchcounterclockwise":
 								var players = [request.player.id]
-									players.concat(getActiveOpponents(request, "right"))
+									players = players.concat(getActiveOpponents(request, "right"))
 
 								for (var i = 0; i < players.length - 1; i++) {
 									completeMove(request.game.spots[players[i]].cups[0], request.game.spots[players[i]].cups, request.game.spots[players[i + 1]].cups)	
@@ -508,13 +528,14 @@
 
 							case "kingdistribute":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
+								request.game.spots[request.target[0]].active = true
 								
 								var opponents = getActiveOpponents(request, "left")
-								if (request.player.cups.length && (getAllPlayers(request) - 1 == opponents.length)) {
+								if (request.player.cups.length && (getAllPlayers(request).length == opponents.length + 1)) {
 									request.player.king = false
 
-									request.game.state.status = (request.player.name || "player " + request.player.seat) + " has redistributed the cups"
 									request.game.state.turn = opponents[0]
+									request.game.state.status = (request.player.name || "player " + request.player.seat) + " has redistributed the cups; " + (request.game.spots[request.game.state.turn].name || "player " + request.game.spots[request.game.state.turn].seat) + "'s turn"
 									request.game.state.acted = false
 								}
 							break
@@ -523,25 +544,25 @@
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
 
 								var opponents = getActiveOpponents(request, "left")
-								if (request.player.cups.length && !request.game.spots.table.cups.length && !opponents.filter(function (o) { return !o.cups.length }).length) {
+								if (request.player.cups.length && !request.game.spots.table.cups.length && !opponents.filter(function (o) { return !request.game.spots[o].cups.length }).length) {
 									request.game.state.status = (request.player.name || "player " + request.player.seat) + " has redistributed the cups"
 									request.game.state.acted = true
 								}
 							break
 
-						// drinkup / drinkupall
+						// drinkup / drinkall
 							case "drinkup":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
-								resolveDrink(request.card, request.game.spots[request.origin[0]], request)
+								var type = resolveDrink(request.card, request.game.spots[request.origin[0]], request)
 
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " makes " + (request.game.spots[request.origin[0]].name || "player " + request.game.spots[request.origin[0]].seat) + " drink " + request.card.type
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " makes " + (request.game.spots[request.origin[0]].name || "player " + request.game.spots[request.origin[0]].seat) + " drink " + request.card.type + (type == request.card.type.replace(/\s/g, "") ? "" : ", which becomes " + type) + (request.game.spots[request.origin[0]].debt ? "; discard " + request.game.spots[request.origin[0]].debt : "")
 							break
 
-							case "drinkupall":
+							case "drinkall":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
-								resolveDrink(request.card, request.game.spots[request.origin[0]], request)
+								var type = resolveDrink(request.card, request.game.spots[request.origin[0]], request)
 
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " makes " + (request.game.spots[request.origin[0]].name || "player " + request.game.spots[request.origin[0]].seat) + " drink " + request.card.type
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " makes " + (request.game.spots[request.origin[0]].name || "player " + request.game.spots[request.origin[0]].seat) + " drink " + request.card.type + (type == request.card.type.replace(/\s/g, "") ? "" : ", which becomes " + type) + (request.game.spots[request.origin[0]].debt ? "; discard " + request.game.spots[request.origin[0]].debt : "")
 							break
 
 							case "cupback":
@@ -574,9 +595,9 @@
 						// drink
 							case "drink":
 								completeMove(request.card, request.game.spots[request.origin[0]][request.origin[1]], request.game.spots[request.target[0]][request.target[1]])
-								resolveDrink(request.card, request.player, request)
+								var type = resolveDrink(request.card, request.player, request)
 								
-								request.game.state.status = (request.player.name || "player " + request.player.seat) + " drinks " + request.card.type
+								request.game.state.status = (request.player.name || "player " + request.player.seat) + " drinks " + request.card.type + (type == request.card.type.replace(/\s/g, "") ? "" : ", which becomes " + type) + (request.game.spots[request.origin[0]].debt ? "; discard " + request.game.spots[request.origin[0]].debt : "")
 								request.game.state.acted = true
 							break
 
@@ -602,6 +623,7 @@
 
 				// update data
 					if (request.move) {
+						console.log(request.move)
 						request.game.updated = new Date().getTime()
 
 						main.storeData("games", {id: request.game.id}, request.game, {}, function (game) {
@@ -671,9 +693,10 @@
 						// clear cups
 							for (var i = 0; i < allPlayers.length; i++) {
 								if (request.game.spots[allPlayers[i]].cups.length) {
-									request.game.spots[allPlayers[i]].cups[0].face = "down"
+									request.game.spots[allPlayers[i]].cups[0].face = "back"
 
 									if (request.game.spots[allPlayers[i]].cups[0].type.replace(/\s/g, "") == "royalwine") {
+										request.game.spots[allPlayers[i]].king = true
 										completeMove(request.game.spots[allPlayers[i]].cups[0], request.game.spots[allPlayers[i]].cups, request.game.spots.table.cards)
 									}
 									else {
@@ -699,27 +722,33 @@
 						// new round
 							else {
 								request.game.state.round += 1
-								request.game.state.turn = false
 
 								// deal cards if possible
 									if (allPlayers.length > request.game.spots.deck.cards.length) {
 										shufflePile(request, "cards")
+									}
 
-										if (allPlayers.length <= request.game.spots.deck.cards) {
-											for (var i = 0; i < allPlayers.length; i++) {
-												completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, request.game.spots[allPlayers[i]].cards)
-											}
+									if (allPlayers.length <= request.game.spots.deck.cards.length) {
+										for (var i = 0; i < allPlayers.length; i++) {
+											completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, request.game.spots[allPlayers[i]].cards)
 										}
 									}
 
 								// move cups to center
 									if (allPlayers.length - 1 > request.game.spots.deck.cups.length) {
 										shufflePile(request, "cups")
-
-										for (var i = 0; i < allPlayers.length - 1; i++) {
-											completeMove(request.game.spots.deck.cups[0], request.game.spots.deck.cups, request.game.spots.table.cards)
-										}
 									}
+
+									for (var i = 0; i < allPlayers.length - 1; i++) {
+										completeMove(request.game.spots.deck.cups[0], request.game.spots.deck.cups, request.game.spots.table.cards)
+									}
+
+								// king's turn
+									var king = allPlayers.find(function (p) {
+										return request.game.spots[p].king
+									})
+									request.game.state.turn = king
+									request.game.state.status = (request.game.spots[king].name || ("player " + request.game.spots[king].seat)) + " distributes the cups"
 							}
 					}
 
@@ -841,7 +870,7 @@
 					}
 					else {
 						cup.face = "front"
-						player.debt = 2
+						player.debt = Math.floor(player.cards.length / 2) || 0
 						player.active = false
 					}
 				}
@@ -865,9 +894,8 @@
 					completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
 				}
 
-				if (type == "royalwine") {
-					player.king = true
-				}
+			// return values
+				return type
 		}
 
 	/* isRoundEnd */
