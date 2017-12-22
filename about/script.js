@@ -20,7 +20,7 @@
 					var text = sanitizeString(text).replace(/\&/gi, "%26")
 
 					var request = new XMLHttpRequest()
-						request.open("GET", "https://script.google.com/macros/s/################/exec?time=" + time + "&email=" + email + "&text=" + text, true)
+						request.open("GET", "https://script.google.com/macros/s/AKfycbzfQhGlEqH9aQiYaHMYR1-c7BRnSDY2YACWk7GSzkQs2zPNLoc/exec?time=" + time + "&email=" + email + "&text=" + text, true)
 						request.onload = function() {
 							if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
 								displayError("Thanks! Feedback sent!")
