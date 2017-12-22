@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Chalice: the card game</title>
+		<script node> getAsset("meta") </script>node>
+		<script node> getAsset("google fonts") </script>node>
+		<link rel="shortcut icon" type="image/png" href="logo.png"/>
+		<link rel="stylesheet" type="text/css" href="./about/stylesheet.css"/>
+		<script type="text/javascript" src="./about/script.js"></script>
+	</head>
+	<body>
+		<div id="error" class="hidden"></div>
+		<div id="container">
+			<div id="container-inner">
+				<a id="top" class="section" href="../../">
+					<div id="title">Chalice: the card game</div>
+				</a>
+				<div id="overview" class="section">
+					<div class="content">
+						<br><br>
+						The goal of the game? Don't die.
+						<br><br>
+						In this fast-paced card game of death, destiny, and deception, players compete for the kingdom in a classic battle of wits.
+						<br><br>
+						Careful, though! Drink <span class="red">Wine</span> to expand your lead, drink <span class="blue">Water</span> to keep your cards, but drink <span class="green">Poison</span> and you'll lose half your hand!
+						<br><br>
+						Who will live long enough to be crowned the king?
+						
+						<br><br><iframe class="video" src="https://www.youtube.com/embed/KrR_qLFWo2E" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+					</div>
+				</div>
+				<div id="rules" class="section">
+					<br><div class="header">Rules</div><br><br>
+					<div class="content">
+						<div class="subheader">Requirements</div>
+						<ul>
+							<li>3-6 players</li>
+							<li>1 smartphone/computer each</li>
+							<li>30-60 minutes</li>
+						</ul>
+						
+						<div class="subheader">Setup</div>
+						<ul>
+							<li>One player creates a game using the <span class="green">new</span> button.</li>
+							<li>All other players join using the 4-letter gamecode and the <span class="green">join</span> button.</li>
+							<li>Each player can edit their name.</li>
+							<li>Every round, each player will be given a secret <span class="black">Cup</span> and 4 <span class="white">Actions</span>.</li>
+						</ul>
+
+						<div class="subheader">Gameplay</div>
+						<ul>
+							<li>On your turn, you must either play &amp; discard an <span class="white">Action</span> or drink your <span class="black">Cup</span>.</li>
+							<li>The round ends after all players drink their <span class="black">Cup</span>.</li>
+							<li>Then a new round begins - only this time, whoever drank the <span class="yellow">Royal Wine</span> will distribute the <span class="black">Cups</span>!</li>
+						</ul>
+
+						<div class="subheader">Ending</div>
+						<ul>
+							<li>3 players: a player has 12+ <span class="white">Actions</span></li>
+							<li>4 players: a player has 10+ <span class="white">Actions</span></li>
+							<li>5 players: a player has 9+ <span class="white">Actions</span></li>
+							<li>6 players: a player has 8+ <span class="white">Actions</span></li>
+						</ul>
+
+						<br><br><iframe class="video" src="https://www.youtube.com/embed/qghtsTID8iE" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+					</div>
+				</div>
+				<div id="roles" class="section">
+					<br><div class="header">Cards</div><br><br>
+					<div class="content">
+						<div class="subheader">Cups</div>
+						<ul>
+							<li><span class="gray">Arsenic</span>, <span class="orange">Cyanide</span>, <span class="green">Hemlock</span>, <span class="purple">Nightshade</span>: Discard half of your <span class="white">Actions</span> (rounded down)</li>
+							<li><span class="blue">Water</span>: Keep your <span class="white">Actions</span></li>
+							<li><span class="red">Wine</span>, <span class="yellow">Royal Wine</span>: Draw 2 <span class="white">Actions</span></li>
+						</ul>
+
+						<div class="subheader">Actions</div>
+						<ul>
+							<li><span class="green">Immunity</span>: Become immune to a particular <span class="green">Poison</span>, so it resolves as <span class="blue">Water</span></li>
+							<li><span class="red">Miracle</span>: Turn <span class="blue">Water</span> into <span class="red">Wine</span></li>
+							<li><span class="white">Look</span>: Look at all opponents' <span class="black">Cups</span></li>
+							<li><span class="white">Switch</span> (Left, Right, Clockwise, Counterclockwise, Any): Look at an opponent <span class="black">Cup</span> and decide if you want to switch for it</li>
+							<li><span class="white">Drink up!</span>: Make an opponent drink their <span class="black">Cup</span>
+							</li>
+							<li><span class="orange">Drink all!</span>: Make all players drink their <span class="black">Cups</span>
+							</li>
+							<li><span class="white">Steal</span>: Take an opponent at an opponent <span class="white">Action</span>, or an <span class="green">Immunity</span> or <span class="red">Miracle</span> from the table</li>
+							<li><span class="green">Redistribute</span>: Move all active <span class="black">Cups</span> to the table and distribute 1 to each active player</li>
+						</ul>
+
+						<br><br><iframe class="video" src="https://www.youtube.com/embed/0Zy_LGa7XfA" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
+					</div>
+				</div>
+				<div id="feedback" class="section">
+					<br><div class="header">Feedback</div><br><br>
+					<div class="content">
+						<textarea id="feedback-text" rows="4" placeholder="please share your feedback here" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+						<input type="email" id="feedback-email" placeholder="your email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/><button id="feedback-submit" value="submit">&#8595;</button>
+					</div>
+				</div>
+				<div id="code" class="section">
+					<br><div class="header">Code</div><br><br>
+					<div class="content">
+						This application is powered by <span class="white">nodeJS</span> and <span class="white">mongoDB</span>, written in 100% raw <span class="white">javascript</span>.
+						<br><br>
+						See the latest updates on <a href="https://github.com/jamesbmayr/chalice" target="_blank" class="blue">Github</a>.
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

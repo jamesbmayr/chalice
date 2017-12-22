@@ -44,3 +44,16 @@
 				})
 			}
 		}
+
+/*** purchase ***/
+	/* showPurchase */
+		document.getElementById("show").addEventListener("click", showPurchase)
+		function showPurchase() {
+			document.getElementById("purchase").className = "visible"
+		}
+
+	/* hidePurchase */
+		document.getElementById("hide").addEventListener("click", hidePurchase)
+		function hidePurchase() {
+			document.getElementById("purchase").className = "invisible"
+		}

@@ -49,6 +49,13 @@
 
 		.invisible {
 			opacity: 0;
+			pointer-events: none;
+			transition: 2s;
+		}
+
+		.visible {
+			opacity: 1;
+			transition: 2s;
 		}
 
 	/* sections */
