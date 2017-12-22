@@ -279,7 +279,7 @@
 								request.move = "cupback"
 								enactMove(request, callback) // returning cup to opponent after drinkup / drinkall
 							}
-							else if ((request.player.id == request.game.state.turn) && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards") && !request.game.spots.table.cups.length && (request.game.spots.table.cards.length == 1)) {
+							else if ((request.player.id == request.game.state.turn) && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "card") && (request.target[0] == "pile") && (request.target[1] == "cards") && !request.game.spots.table.cups.length && (request.game.spots.table.cards.length == 1) && (request.card.type.replace(/\s/g, "") !== "drinkall" || (!request.player.active && !activeLeft.length))) {
 								request.move = "discardend"
 								enactMove(request, callback) // discarding action to end turn
 							}
@@ -389,7 +389,7 @@
 								request.move = "cancelswitch"
 								enactMove(request, callback) // cancel switch
 							}
-							else if (!request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length && request.game.spots[request.target[0]].debt) {
+							else if (!request.game.state.acted && (request.origin[0] == "table") && (request.origin[1] == "cards") && (request.card.form == "cup") && allPlayers.includes(request.target[0]) && (request.target[1] == "cups") && !request.game.spots[request.target[0]].cups.length && !request.game.spots[request.target[0]].debt) {
 								request.move = "cupback"
 								enactMove(request, callback) // returning cup to opponent after drinkup / drinkall
 							}
@@ -535,7 +535,7 @@
 									request.player.king = false
 
 									request.game.state.turn = opponents[0]
-									request.game.state.status = (request.player.name || "player " + request.player.seat) + " has redistributed the cups; " + (request.game.spots[request.game.state.turn].name || "player " + request.game.spots[request.game.state.turn].seat) + "'s turn"
+									request.game.state.status = (request.player.name || "player " + request.player.seat) + " has distributed the cups; " + (request.game.spots[request.game.state.turn].name || "player " + request.game.spots[request.game.state.turn].seat) + "'s turn"
 									request.game.state.acted = false
 								}
 							break
@@ -623,7 +623,6 @@
 
 				// update data
 					if (request.move) {
-						console.log(request.move)
 						request.game.updated = new Date().getTime()
 
 						main.storeData("games", {id: request.game.id}, request.game, {}, function (game) {
@@ -890,8 +889,17 @@
 				if (["wine", "royalwine"].includes(type)) {
 					cup.face = "front"
 					player.active = false
-					completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
-					completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
+
+					if (request.game.spots.deck.cards.length < 2) {
+						shufflePile(request, "cards")
+					}
+
+					if (request.game.spots.deck.cards.length) {
+						completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
+					}
+					if (request.game.spots.deck.cards.length) {
+						completeMove(request.game.spots.deck.cards[0], request.game.spots.deck.cards, player.cards)
+					}
 				}
 
 			// return values
@@ -932,7 +940,7 @@
 			}
 			else {
 				victors = victors.sort(function (a, b) {
-					return a.cards.length > b.cards.length
+					return a.cards.length < b.cards.length
 				})
 
 				var winCount = victors[0].cards.length
@@ -952,10 +960,10 @@
 				var pile = request.game.spots.pile[form]
 				var deck = request.game.spots.deck[form]
 
+				pile = main.sortRandom(pile)
+				pile = main.sortRandom(pile)
+				pile = main.sortRandom(pile)
 				deck = deck.concat(pile)
-				deck = main.sortRandom(deck)
-				deck = main.sortRandom(deck)
-				deck = main.sortRandom(deck)
 
 				request.game.spots.deck[form] = deck
 				request.game.spots.pile[form] = []

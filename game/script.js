@@ -1,10 +1,11 @@
 /*** onload ***/
 	/* globals */
 		var board   = document.getElementById("board")
-		var status  = document.getElementById("status")
+
 		var round   = parseInt(board.getAttribute("round")) || null
 		var turn    = parseInt(board.getAttribute("turn"))  || null
 		var player  =          board.getAttribute("player") || null
+
 		var active  = null
 		var activeX = null
 		var activeY = null
@@ -15,21 +16,21 @@
 			// cards
 				var cardsBlock = '<div class="cards" id="' + person.id + '-cards">'
 				for (var c = 0; c < person.cards.length; c++) {
-					cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? person.cards[c].type.replace(/\s/g, "") : "") + '" id="' + person.cards[c].id + '"></div>'
+					cardsBlock += '<div class="card" face="' + (person.id == player ? "front" : "back") + '" type="' + (person.id == player ? person.cards[c].type.replace(/\s/g, "") : "") + '" title="' + (person.id == player ? person.cards[c].type : "???") + '" id="' + person.cards[c].id + '"></div>'
 				}
 				cardsBlock += '</div>'
 
 			// immunities
 				var immunitiesBlock = '<div class="immunities" id="' + person.id + '-immunities">'
 				for (var i = 0; i < person.immunities.length; i++) {
-					immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g, "") + '" id="' + person.immunities[i].id + '"></div>'
+					immunitiesBlock += '<div class="card" face="front" type="' + person.immunities[i].type.replace(/\s/g, "") + '" title="' + person.immunities[i].type + '" id="' + person.immunities[i].id + '"></div>'
 				}
 				immunitiesBlock += '</div>'
 
 			// cups
 				var cupsBlock = '<div class="cups" id="' + person.id + '-cups">'
 				for (var c = 0; c < person.cups.length; c++) {
-					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cups[c].type.replace(/\s/g, "") : "") + '" id="' + person.cups[c].id + '"></div>'
+					cupsBlock += '<div class="cup" face="' + person.cups[c].face + '" type="' + (person.cups[c].face == "front" ? person.cups[c].type.replace(/\s/g, "") : "") + '" title="' + (person.cups[c].face == "front" ? person.cups[c].type : "???") + '" id="' + person.cups[c].id + '"></div>'
 				}
 				cupsBlock += '</div>'
 
@@ -84,7 +85,7 @@
 				var cupsBlock = '<div id="table-cups" class="cups">'
 				for (var c in game.spots.table.cups) {
 					var cup = game.spots.table.cups[c]
-					cupsBlock += '<div class="cup" face="' + (turn == player ? "front" : "back") + '" type="' + (turn == player ? cup.type.replace(/\s/g, "") : "") + '" id="' + cup.id + '"></div>'
+					cupsBlock += '<div class="cup" face="' + (turn == player ? "front" : "back") + '" type="' + (turn == player ? cup.type.replace(/\s/g, "") : "") + '" title="' + (turn == player ? cup.type : "???") + '" id="' + cup.id + '"></div>'
 				}
 				cupsBlock += "</div>"
 				tableBlock += cupsBlock
@@ -93,7 +94,7 @@
 				var cardsBlock = '<div id="table-cards" class="cards">'
 				for (var c in game.spots.table.cards) {
 					var card = game.spots.table.cards[c]
-					cardsBlock += '<div class="card" face="front" type="' + card.type.replace(/\s/g, "") + '" id="' + card.id + '"></div>'
+					cardsBlock += '<div class="card" face="front" type="' + card.type.replace(/\s/g, "") + '" title="' + card.type + '" id="' + card.id + '"></div>'
 				}
 				cardsBlock += "</div>"
 				tableBlock += cardsBlock
@@ -135,7 +136,6 @@
 			// check for game end
 				if (game.state.end) {
 					clearInterval(fetchLoop)
-					status.innerText = "the game is over!"
 				}
 		}
 
@@ -284,12 +284,20 @@
 		fetchLoop = setInterval(fetchData, 5000)
 		if (typeof window.clearLoop !== "undefined" && window.clearLoop !== null && window.clearLoop) { clearInterval(fetchLoop) }
 		function fetchData() {
-			sendPost({action: "fetchData", round: round, turn: turn}, function(response) {
-				if (!response.success) {
-					displayError(response.message || "unable to fetch data...")
-				}
-				else if ((response.game.state.round !== round || response.game.state.turn !== turn) && (!active)) {
-					buildEverything(response.game)
-				}
-			})
+			if (!active) {
+				sendPost({action: "fetchData", round: round, turn: turn}, function(response) {
+					if (active) {
+						//
+					}
+					else if (!response.success) {
+						displayError(response.message || "unable to fetch data...")
+					}
+					else if (((response.game.state.round !== round) || (response.game.state.turn !== turn))) {
+						buildEverything(response.game)
+					}
+					else if (document.getElementById("status").innerText.toLowerCase() !== response.game.state.status.toLowerCase()) {
+						buildEverything(response.game)
+					}
+				})
+			}
 		}
