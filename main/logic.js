@@ -458,7 +458,7 @@
 				var sort = options["$sort"] || {created: -1}
 				var limit = options["$limit"] || 100
 
-			mongo.connect(database, function(error, db) {
+			mongo.connect(database, { useNewUrlParser: true }, function(error, db) {
 				if (error) {
 					logError(error)
 					callback(null)
