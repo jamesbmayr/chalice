@@ -10,7 +10,7 @@
 			try {
 				// create game
 					request.game = {
-						id: main.generateRandom("abcdefghijklmnopqrstuvwxyz"),
+						id: main.generateRandom("abcdefghijklmnopqrstuvwxyz", 4),
 						created: new Date().getTime(),
 						updated: new Date().getTime(),
 						state: {
@@ -81,7 +81,7 @@
 
 				// store data
 					main.storeData("games", null, request.game, {}, function (data) {
-						callback({success: true, message: "created the game", location: "../../game/" + request.game.id.substring(0,4)})
+						callback({success: true, message: "created the game", location: "../../game/" + request.game.id})
 					})
 			}
 			catch (error) {
@@ -133,7 +133,7 @@
 					callback({success: false, message: "game id must be letters and numbers only"})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + gameCode + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							callback({success: false, message: "game id not found"})
 						}
@@ -141,7 +141,7 @@
 							callback({success: false, message: "game is maxed out"})
 						}
 						else if (games[0].spots[request.session.id]) {
-							callback({success: true, message: "already joined this game", location: "../../game/" + games[0].id.substring(0,4)})
+							callback({success: true, message: "already joined this game", location: "../../game/" + games[0].id})
 						}
 						else if (games[0].state.start) {
 							callback({success: false, message: "game has already started"})
@@ -165,7 +165,7 @@
 									callback({success: false, message: "unable to join this game"})
 								}
 								else {
-									callback({success: true, message: "joined the game", location: "../../game/" + request.game.id.substring(0,4)})
+									callback({success: true, message: "joined the game", location: "../../game/" + request.game.id})
 								}
 							})
 						}

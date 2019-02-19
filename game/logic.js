@@ -11,7 +11,7 @@
 					callback({success: false, message: "not a valid fetch request"})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "game cannot be found"})
@@ -37,7 +37,7 @@
 					callback({success: false, message: "invalid input"})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "game cannot be found"})
@@ -90,7 +90,7 @@
 					callback({success: false, message: "invalid target"})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "game cannot be found"})
@@ -130,7 +130,7 @@
 					callback({success: false, message: "invalid selection"})
 				}
 				else {
-					main.retrieveData("games", {$where: "this.id.substring(0,4) === '" + request.path[2].toLowerCase() + "'"}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
 						if (!games) {
 							main.logError("unable to find game: " + request.path[2].toLowerCase())
 							callback({success: false, message: "game cannot be found"})
