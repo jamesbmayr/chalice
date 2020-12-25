@@ -580,11 +580,23 @@
 						if (error) {
 							logError(error)
 							callback(null)
+							client.close()
 						}
 						else {
-							callback(result.value)
+							db.collection(collection).find(filter, projection).sort(sort).limit(limit).maxTimeMS(1000).toArray(function (error, resultArray) {
+								if (error) {
+									logError(error)
+									callback(null)
+								}
+								else {
+									if (resultArray.length === 0) {
+										resultArray = null
+									}
+									callback(resultArray[0])
+								}
+								client.close()
+							})
 						}
-						client.close()
 					})
 				}
 
