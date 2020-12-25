@@ -576,7 +576,7 @@
 			//findOneAndUpdate
 				else if ((filter !== null) && (data !== null) && (!multi)) {
 					// logMessage("findOneAndUpdate: " + collection + ": " + JSON.stringify(filter) + ":\n" + JSON.stringify(data))
-					db.collection(collection).updateOne(filter, data, {sort: sort, projection: projection}, function (error, result) {
+					db.collection(collection).replaceOne(filter, data, {upsert: upsert, sort: sort, projection: projection}, function (error, result) {
 						if (error) {
 							logError(error)
 							callback(null)
