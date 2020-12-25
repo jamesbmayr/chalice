@@ -133,7 +133,7 @@
 					callback({success: false, message: "game id must be letters and numbers only"})
 				}
 				else {
-					main.retrieveData("games", {id: request.path[2].toLowerCase()}, {$multi: true}, function (games) {
+					main.retrieveData("games", {id: gameCode}, {$multi: true}, function (games) {
 						if (!games) {
 							callback({success: false, message: "game id not found"})
 						}
