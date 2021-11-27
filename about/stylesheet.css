@@ -18,6 +18,28 @@
 			margin-right: auto;
 		}
 
+	/* j-logo */
+		#j-logo {
+			position: fixed;
+			top: 14px;
+			right: 8px;
+			background-color: transparent;
+			background-image: url("https://jamesmayr.com/resources/j.png");
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-position: center center;
+			height: 32px;
+			width: 32px;
+			cursor: pointer;
+			z-index: 1000;
+			outline: none;
+			filter: drop-shadow(0px 0px 2px #222222);
+		}
+		
+		#j-logo:hover, #j-logo:focus {
+			filter: drop-shadow(0px 0px 4px #777777);
+		}
+
 	/* title */
 		#top {
 			display: block;

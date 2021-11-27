@@ -12,35 +12,13 @@
 		<div id="background"></div>
 		<div id="error" class="hidden"></div>
 		<div id="container">
+			<a href="https://jamesmayr.com" target="_blank" id="j-logo"></a>
 			<div id="title">chalice</div>
 			<div id="links">
 				<a href="./about">about</a>
-				 • 
-				<a id="show" href="javascript:;">buy</a>
-				 • 
-				<a href="http://jamesmayr.com" target="_blank">creator</a>
 			</div>
 			<button id="createGame">new</button>
 			<input id="gameCode" type="text" placeholder="id" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/><button id="joinGame">join</button>
-		</div>
-		<div id="purchase" class="invisible">
-			<a href="javascript:;" id="hide">x</a>
-			<form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post" >
-				<input type="hidden" name="cmd" value="_s-xclick">
-				<input type="hidden" name="on0" value="Location">
-				send my deck to:
-				<select name="os0">
-					<option value="United States">United States $20.00 USD</option>
-					<option value="Canada">Canada $25.00 USD</option>
-					<option value="UK/EU">UK/EU $30.00 USD</option>
-					<option value="Rest of World">Rest of World $30.00 USD</option>
-				</select>
-				<input type="hidden" name="currency_code" value="USD">
-				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-					">
-				<button name="submit" alt="PayPal - The safer, easier way to pay online!"></button>
-				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-			</form>
 		</div>
 	</body>
 </html>
