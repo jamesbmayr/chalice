@@ -625,7 +625,7 @@
 					if (request.move) {
 						request.game.updated = new Date().getTime()
 
-						main.storeData("games", {id: request.game.id}, request.game, {}, function (game) {
+						main.storeData("games", {id: request.game.id}, {$set: request.game}, {}, function (game) {
 							if (!game) {
 								callback({success: false, message: "unable to save game data"})
 							}
@@ -754,7 +754,7 @@
 				// update data
 					request.game.updated = new Date().getTime()
 
-					main.storeData("games", {id: request.game.id}, request.game, {}, function (game) {
+					main.storeData("games", {id: request.game.id}, {$set: request.game}, {}, function (game) {
 						if (!game) {
 							callback({success: false, message: "unable to save game data"})
 						}

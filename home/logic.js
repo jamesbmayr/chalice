@@ -160,7 +160,7 @@
 								game.completeMove(request.game.spots.deck.cups[0], request.game.spots.deck.cups, request.game.spots.table.cards)
 
 							request.game.state.updated = new Date().getTime()
-							main.storeData("games", {id: request.game.id}, request.game, {}, function (data) {
+							main.storeData("games", {id: request.game.id}, {$set: request.game}, {}, function (data) {
 								if (!data) {
 									callback({success: false, message: "unable to join this game"})
 								}
