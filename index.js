@@ -44,8 +44,8 @@
 						}
 
 					// where next ?
-						if (request.headers["host"] === "chalicethegame.herokuapp.com") { // redirect to custom domain
-							response.writeHead(302, {Location: "http://www.chalicethegame.com"})
+						if (request.headers["host"] === "chalicethegame.com") { // redirect to generic domain
+							response.writeHead(302, {Location: "https://chalicethegame.herokuapp.com"})
 							response.end()
 						}
 						else if ((/[.](ico|png|jpg|jpeg|gif|svg|pdf|txt|css|js)$/).test(request.url)) { // serve asset
