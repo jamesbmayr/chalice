@@ -44,7 +44,7 @@
 						}
 
 					// where next ?
-						if (request.headers["host"] === "chalicethegame.com") { // redirect to generic domain
+						if (request.headers["host"] === "chalicethegame.com" || request.headers["host"] === "www.chalicethegame.com") { // redirect to generic domain
 							response.writeHead(302, {Location: "https://chalicethegame.herokuapp.com"})
 							response.end()
 						}
