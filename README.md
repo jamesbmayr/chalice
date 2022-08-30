@@ -1,6 +1,6 @@
 # Chalice
 
-a game of death and deception: https://chalicethegame.herokuapp.com
+a game of death and deception: https://jamesmayr.com/chalice
 
 <pre style='line-height: 0.5; text-align: center'>
    ______________   

@@ -80,9 +80,9 @@
 								<meta name="keywords" content="game,chalice,cards,card,deduction,guess,party,tabletop"/>\n\
 								<meta name="author" content="James Mayr"/>\n\
 								<meta property="og:title" content="Chalice: the card game"/>\n\
-								<meta property="og:url" content="https://chalicethegame.herokuapp.com"/>\n\
+								<meta property="og:url" content="https://jamesmayr.com/chalice"/>\n\
 								<meta property="og:description" content="Chalice is a game of death and deception."/>\n\
-								<meta property="og:image" content="https://chalicethegame.herokuapp.com/banner.png"/>\n\
+								<meta property="og:image" content="https://jamesmayr.com/chalice/banner.png"/>\n\
 								<meta name="viewport" content="initial-scale=1.0, width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no"/>'
 					break
 
